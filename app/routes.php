@@ -20,6 +20,16 @@ return function (App $app) {
         return $response;
     });
 
+    $app->get('/db-test', function(Request $request, Response $response) {
+        $db = $this->get(PDO::class);
+        $sth = $db->prepare("SELECT * FROM tasks ORDER BY task");
+        $sth->execute();
+        $data = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $payload = json_encode($data);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    });
+
     $app->post('/upload', function (Request $request, Response $response) {
         $params = (array)$request->getParsedBody();
 
