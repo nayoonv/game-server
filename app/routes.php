@@ -22,7 +22,7 @@ return function (App $app) {
 
     $app->get('/db-test', function(Request $request, Response $response) {
         $db = $this->get(PDO::class);
-        $sth = $db->prepare("SELECT * FROM tasks ORDER BY task");
+        $sth = $db->prepare("SELECT * FROM tide");
         $sth->execute();
         $data = $sth->fetchAll(PDO::FETCH_ASSOC);
         $payload = json_encode($data);
