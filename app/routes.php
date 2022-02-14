@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Application\Actions\User\ListUsersAction;
 use App\Application\Actions\User\ViewUserAction;
+use App\Application\Actions\File\UploadFileAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -31,16 +32,22 @@ return function (App $app) {
     });
 
     $app->post('/upload', function (Request $request, Response $response) {
-        $params = (array)$request->getParsedBody();
+        $container = $app->getContainer();
+        $container['upload_directory'] = require __DIR__ . '/uploads';
+        $directory = $this->get('upload_directory');
 
-        $response->getBody()->write($params['data']);
-        return $response;
+        $uploadedFiles = $request->getUploadedFiles();
+
+        // handle single input with single file upload
+        $uploadedFile = $uploadedFiles['file'];
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $filename = moveUploadedFile($directory, $uploadedFile);
+            $response->write('uploaded ' . $filename . '<br/>');
+        }
     });
 
-    $app->get('/hello/{name}', function (Request $request, Response $response) {
-        $response->getBody()->write('My Hello world3');
-        return $response;
-    });
+    $app->get('/file-upload', UploadFileAction::class);
+
     $app->get('/bye', function (Request $request, Response $response) {
         $response->getBody()->write('My Hello world4');
         return $response;
@@ -54,3 +61,14 @@ return function (App $app) {
         $group->get('/{id}', ViewUserAction::class);
     });
 };
+
+function moveUploadedFile($directory, UploadedFile $uploadedFile)
+{
+    $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+    $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
+    $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+
+    return $filename;
+}
