@@ -1,0 +1,5 @@
+map_id,map_name,distance,max_depth,cost_to_sail,time_to_sail,level_limit,reduced_durability
+1,얕은 연안,2,20,100,5,1,100
+2,근거리 바다,10,100,200,25,2,200
+3,깊은 연안,15,500,500,35,3,300
+4,먼거리 바다,20,4000,1000,50,4,400

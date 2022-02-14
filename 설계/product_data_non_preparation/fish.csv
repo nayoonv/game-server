@@ -1,0 +1,4 @@
+fish_id,map_id,fish_name,favorite_depth,depth_error_range,fish_grade_id,max_length,max_weight,price,experience
+1,4,줄가자미,1800,200,2,40,30000,20000,100
+2,1,학꽁치,20,19,1,50,40000,30000,150
+3,3,감성돔,2500,1000,3,30,40000,100000,200
