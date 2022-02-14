@@ -49,7 +49,7 @@ return function (App $app) {
     $app->get('/file-upload', UploadFileAction::class);
 
     $app->get('/bye', function (Request $request, Response $response) {
-        $response->getBody()->write('My Hello world4');
+        $response->getBody()->write('My Hello world42');
         return $response;
     });
     $app->get('/hey', function (Request $request, Response $response) {
