@@ -48,7 +48,7 @@ return function (App $app) {
 
     $app->get('/file-upload', UploadFileAction::class);
 
-    $app->get('/bye', function (Request $request, Response $response) {
+    $app->post('/bye', function (Request $request, Response $response) {
         $response->getBody()->write('My Hello world42');
         return $response;
     });
