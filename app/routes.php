@@ -38,8 +38,16 @@ return function (App $app) {
         $uploadedFile = $files['file'];
 
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-            $filename = moveUploadedFile(__DIR__ . '/uploads', $uploadedFile);
-            $response->getBody()->write('Uploaded: ' . $filename . '<br/>');
+            $response->getBody()->write('Uploaded: ' . $uploadedFile->getClientFilename() . '<br/>');
+//            $myfile = fopen($uploadedFile, "r");
+//            $myfileSize = filesize($uploadedFile);
+//            $response->getBody()->write(fread($myfile, $myfileSize));
+//            fclose($uploadedFile);
+            $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+            $basename = bin2hex(random_bytes(8));
+            $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+            $uploadedFile->moveTo(__DIR__ . '/uploads' . DIRECTORY_SEPARATOR . $filename);
         }
 
         return $response;
