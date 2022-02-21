@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Actions\File;
+namespace App\Application\Actions\Common;
 
 use App\Application\Actions\Action;
 use App\Domain\DomainException\DomainRecordNotFoundException;
@@ -18,6 +18,7 @@ class ViewUploadAction extends Action
 
     protected function action(): Response {
         $viewData = [
+            'title' => '데이터베이스 webpage',
             'now' => date('Y-m-d H:i:s'),
         ];
         return $this->view->render(
