@@ -70,3 +70,10 @@ game.pdf, product.pdf - ERD
 22.01.27 - 게임 데이터 (게임 데이터 테이블 구성.xlsx)
 
 22.02.07 - ERD
+
+## 기획 데이터 업로드 페이지
+
+![image](https://user-images.githubusercontent.com/97434362/154876508-390d0802-7df5-4756-aa2b-236c128cd561.png)
+
+csv 파일을 등록하면 table에 등록
+
