@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Domain\Service;
+namespace App\Service\Common;
 
+use App\Infrastructure\Persistence\Base\CommonRepository;
 use PhpOffice\PhpSpreadsheet\Reader\Csv as Csv;
-use App\Domain\Base\CommonRepository;
+use function App\Service\count;
 
 class UploadFileService
 {
-    private $commonRepository;
+    private CommonRepository $commonRepository;
 
     public function __construct(CommonRepository $commonRepository)
     {
         $this->commonRepository = $commonRepository;
     }
 
-    public function loadFile($file) : string{
+    public function loadFile($file): string
+    {
         $response = '';
         $uploadedFile = $file['file'];
 
@@ -49,7 +51,7 @@ class UploadFileService
                 $this->commonRepository->loadData($directory, $tableName);
 
             } else {
-                $response = $response.'처리할 수 있는 포맷의 파일이 아닙니다.';
+                $response = $response . '처리할 수 있는 포맷의 파일이 아닙니다.';
             }
         }
         return $response;

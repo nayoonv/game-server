@@ -2,13 +2,13 @@
 
 namespace App\Application\Actions\Common;
 
-use App\Domain\Service\UploadFileService;
+use App\Service\Common\UploadFileService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class UploadFileAction
 {
-    private $uploadFileService;
+    private UploadFileService $uploadFileService;
 
     public function __construct(UploadFileService $uploadFileService)
     {

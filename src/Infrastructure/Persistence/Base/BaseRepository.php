@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Base;
+namespace App\Infrastructure\Persistence\Base;
 
 use PDO;
 
