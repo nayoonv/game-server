@@ -2,13 +2,18 @@
 
 namespace App\Domain\Service;
 
-use App\Domain\Service\Csv;
-use App\Domain\Service\PDO;
-use function App\Domain\Service\count;
-use function App\Domain\Common\CommonRepository\loadData;
+use PhpOffice\PhpSpreadsheet\Reader\Csv as Csv;
+use App\Domain\Base\CommonRepository;
 
 class UploadFileService
 {
+    private $commonRepository;
+
+    public function __construct(CommonRepository $commonRepository)
+    {
+        $this->commonRepository = $commonRepository;
+    }
+
     public function loadFile($file) : string{
         $response = '';
         $uploadedFile = $file['file'];
@@ -17,7 +22,7 @@ class UploadFileService
 
             $filename = $uploadedFile->getClientFilename();
 
-            $directory = __DIR__ . '/uploads' . DIRECTORY_SEPARATOR . $filename;
+            $directory = '/game/uruk/app/uploads' . DIRECTORY_SEPARATOR . $filename;
             $uploadedFile->moveTo($directory);
 
             $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
@@ -41,7 +46,7 @@ class UploadFileService
                 }
 
                 // connecting db
-                loadData($directory, $tableName);
+                $this->commonRepository->loadData($directory, $tableName);
 
             } else {
                 $response = $response.'처리할 수 있는 포맷의 파일이 아닙니다.';

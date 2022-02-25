@@ -20,6 +20,7 @@ class UploadFileAction
 
         $filename = $this->uploadFileService->loadFile($file);
 
-        return $this->response->getBody()->write($filename . '<br/>');
+        $response->getBody()->write($filename . '<br/>');
+        return $response;
     }
 }
