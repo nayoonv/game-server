@@ -52,5 +52,21 @@ return function (ContainerBuilder $containerBuilder) {
 
             return new Twig($loader, $options);
         },
+
+        Redis::class => function (ContainerInterface $c) {
+            $settings = $c->get(SettingsInterface::class);
+
+            $redisSettings = $settings->get('redis');
+            $host = $redisSettings['host'];
+            $port = $redisSettings['port'];
+            $connectTimeout = $redisSettings['connectTimeout'];
+            $pass = $redisSettings['auth'][1];
+//            $ssl = $redisSettings['ssl'];
+
+            $redis = new Redis();
+            $redis->pconnect($host, $port, $connectTimeout);
+            $redis->auth($pass);
+            return $redis;
+        }
     ]);
 };

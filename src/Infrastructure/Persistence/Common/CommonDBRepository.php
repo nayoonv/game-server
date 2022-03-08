@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Infrastructure\Persistence\Base;
+namespace App\Infrastructure\Persistence\Common;
 
-class CommonRepository extends BaseRepository
+use App\Infrastructure\Persistence\Base\BaseDBRepository;
+
+class CommonDBRepository extends BaseDBRepository
 {
     public function loadData($directory, $tableName) {
         $query = "load data local infile '$directory' ignore into table $tableName

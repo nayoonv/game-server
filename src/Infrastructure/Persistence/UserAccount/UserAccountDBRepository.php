@@ -3,9 +3,9 @@
 namespace App\Infrastructure\Persistence\UserAccount;
 
 use App\Domain\UserAccount\LoginUser;
-use App\Infrastructure\Persistence\Base\BaseRepository;
+use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
-class UserAccountRepository extends BaseRepository
+class UserAccountDBRepository extends BaseDBRepository
 {
     public function findUserByHiveId($hiveId): LoginUser{
         $query = "select u.user_id, a.nation_id, a.language_id, u.level, u.experience, u.gold, u.pearl, u.fatigue

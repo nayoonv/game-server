@@ -19,7 +19,7 @@ class LoginUserAccountAction
 
         $userInfo = $this->loginUserAccountService->getUserInfo($hiveId);
 
-        $response->getBody()->write(json_encode($userInfo->jsonSerialize()));
+        $response->getBody()->write($userInfo);
 
         return $response;
     }

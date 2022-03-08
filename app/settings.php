@@ -43,6 +43,15 @@ return function (ContainerBuilder $containerBuilder) {
                 "twig" => [
                     'path_templates' => __DIR__ . '/templates',
                     'path_cache' => false
+                ],
+                "redis"=> [
+                    'host' => 'localhost',
+                    'port' => 6379,
+                    'connectTimeout' => 1000,
+                    'auth' => ['phpredis', '1111'],
+//                    'ssl' => [
+//                        'verify_peer_name' => false
+//                    ],
                 ]
             ]);
         }

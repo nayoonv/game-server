@@ -33,6 +33,10 @@ class LoginUser implements JsonSerializable
         $this->fatigue = $fatigue;
     }
 
+    public function getUserId(): int {
+        return $this->userId;
+    }
+
     public function jsonSerialize(): array
     {
         return [

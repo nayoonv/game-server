@@ -21,6 +21,10 @@ class UserAccount implements JsonSerializable
         $this->userId = $userId;
     }
 
+    public function getUserId(): int {
+        return $this->userId;
+    }
+
     public function jsonSerialize(): array
     {
         return [

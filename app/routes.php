@@ -44,6 +44,8 @@ return function (App $app) {
     // 1. 로그인
     $app->post('/login', LoginUserAccountAction::class);
 
+    // 2. 유저 인벤토리 목록 조회
+    $app->post('/read-inven', ReadInvenAction::class);
 
     $app->group('/users', function (Group $group) {
         $group->get('', ListUsersAction::class);
