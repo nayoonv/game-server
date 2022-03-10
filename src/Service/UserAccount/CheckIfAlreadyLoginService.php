@@ -12,8 +12,12 @@ class CheckIfAlreadyLoginService
         $this->userAccountInMemoryRepository = $userAccountInMemoryRepository;
     }
 
-    public function isExists($userId): string {
-        return $this->userAccountInMemoryRepository->findSessionKeyByUserId(strval($userId));
+    public function isExists($userId): bool {
+        /*
+            $redis->exists('key'); // 1
+            $redis->exists('NonExistingKey'); // 0
+        */
+        return $this->userAccountInMemoryRepository->findSessionKeyByUserId(strval($userId)) == 1;
     }
 
     public function setSessionKey($userId, $sessionKey): string {

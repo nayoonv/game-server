@@ -6,8 +6,8 @@ use App\Infrastructure\Persistence\Base\BaseInMemoryRepository;
 
 class UserAccountInMemoryRepository extends BaseInMemoryRepository
 {
-    public function findSessionKeyByUserId($userId): string {
-        return $this->redis->get($userId);
+    public function findSessionKeyByUserId($userId): int {
+        return $this->redis->exists($userId);
     }
 
     public function insertUserIdAndSessionKey($userId, $sessionKey): bool {

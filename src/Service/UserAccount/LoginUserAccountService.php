@@ -21,7 +21,11 @@ class LoginUserAccountService
 
         // 건네진 session key로 redis를 조회한 후 일치하면 user id와 session key를 저장한다
 
-        $userId = $this->userAccountRepository->findUserByHiveId($hiveId)->getUserId();
+        $user = $this->userAccountRepository->findUserByHiveId($hiveId);
+        $userId = $user->getUserId();
+//        if ($this->checkIfAlreadyLoginService->isExists($userId)){
+//
+//        }
         return $this->checkIfAlreadyLoginService->isExists($userId);
     }
 }
