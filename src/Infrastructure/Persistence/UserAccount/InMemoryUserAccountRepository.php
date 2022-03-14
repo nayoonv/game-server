@@ -4,7 +4,7 @@ namespace App\Infrastructure\Persistence\UserAccount;
 
 use App\Infrastructure\Persistence\Base\BaseInMemoryRepository;
 
-class UserAccountInMemoryRepository extends BaseInMemoryRepository
+class InMemoryUserAccountRepository extends BaseInMemoryRepository
 {
     public function findSessionKeyByUserId($userId): int {
         return $this->redis->exists($userId);

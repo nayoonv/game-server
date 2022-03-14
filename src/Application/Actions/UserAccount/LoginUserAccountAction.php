@@ -3,6 +3,7 @@
 namespace App\Application\Actions\UserAccount;
 
 use App\Service\UserAccount\LoginUserAccountService;
+use App\Util\JWTManager;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -15,12 +16,17 @@ class LoginUserAccountAction
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $hiveId = $request->getParsedBody()['hive_id'];
-
-        $userInfo = $this->loginUserAccountService->getUserInfo($hiveId);
-
-        $response->getBody()->write($userInfo);
-
+        $body = $request->getParsedBody();
+        $email = $body['email'];
+        $password = $body['password'];
+        $userInfo = $this->loginUserAccountService->login($email, $password);
+        $token = JWTManager::getInstance()->getToken($userInfo->getUserId());
+        $result = [
+            "user"=>$userInfo,
+            "token"=>$token
+        ];
+        $response->getBody()->write(json_encode($result));
+//        $response->getBody()->write
         return $response;
     }
 }

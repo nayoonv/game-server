@@ -12,17 +12,16 @@ class UserAccount implements JsonSerializable
 
     private int $languageId;
 
-    private int $userId;
+    private string $name;
 
-    public function __construct($hiveId, $nationId, $languageId, $userId) {
+    private string $email;
+
+    public function __construct($hiveId, $nationId, $languageId, $name, $email) {
         $this->hiveId = $hiveId;
         $this->nationId = $nationId;
         $this->languageId = $languageId;
-        $this->userId = $userId;
-    }
-
-    public function getUserId(): int {
-        return $this->userId;
+        $this->name = $name;
+        $this->email = $email;
     }
 
     public function jsonSerialize(): array

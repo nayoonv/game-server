@@ -4,7 +4,7 @@ namespace App\Service\UserAccount;
 
 use App\Infrastructure\Persistence\UserAccount\UserAccountDBRepository;
 
-class CreateUserAccountService
+class SignUpUserAccountService
 {
     private UserAccountDBRepository $userAccountDBRepository;
 

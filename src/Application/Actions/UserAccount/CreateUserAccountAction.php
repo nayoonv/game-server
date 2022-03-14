@@ -3,23 +3,23 @@
 namespace App\Application\Actions\UserAccount;
 
 use App\Domain\UserAccount\CreateUserAccount;
-use App\Service\UserAccount\CreateUserAccountService;
+use App\Service\UserAccount\SignUpUserAccountService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CreateUserAccountAction
 {
-    private CreateUserAccountService $createUserAccountService;
+    private SignUpUserAccountService $createUserAccountService;
 
-    public function __construct(CreateUserAccountService $createUserAccountService) {
+    public function __construct(SignUpUserAccountService $createUserAccountService) {
         $this->createUserAccountService = $createUserAccountService;
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $params = $request->getParsedBody();
+        $body= $request->getParsedBody();
         $result = $this->createUserAccountService->createUserAccount(new CreateUserAccount(
-            $params['nation_id'], $params['language_id'], $params['name']
-            , $params['email'], $params['password']));
+            $body['nation_id'], $body['language_id'], $body['name']
+            , $body['email'], $body['password']));
 
         $response->getBody()->write($result);
         return $response;

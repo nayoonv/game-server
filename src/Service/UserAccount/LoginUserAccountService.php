@@ -2,30 +2,34 @@
 
 namespace App\Service\UserAccount;
 
+use App\Domain\User\User1;
+use App\Infrastructure\Persistence\User\UserDBRepository;
 use App\Infrastructure\Persistence\UserAccount\UserAccountDBRepository;
+use App\Service\User\LoginUserService;
 
 class LoginUserAccountService
 {
     private UserAccountDBRepository $userAccountRepository;
-    private CheckIfAlreadyLoginService $checkIfAlreadyLoginService;
+    private UserDBRepository $userDBRepository;
+    private LoginUserService $loginUserService;
 
-    public function __construct(UserAccountDBRepository $userAccountRepository, CheckIfAlreadyLoginService $checkIfAlreadyLoginService) {
+    public function __construct(UserAccountDBRepository $userAccountRepository
+        , UserDBRepository                              $userDBRepository, LoginUserService $loginUserService) {
         $this->userAccountRepository = $userAccountRepository;
-        $this->checkIfAlreadyLoginService = $checkIfAlreadyLoginService;
+        $this->userDBRepository = $userDBRepository;
+        $this->loginUserService = $loginUserService;
     }
 
-    public function getUserInfo($hiveId) {
-        // hive server에 요청한다.
-        // hive server는 hive id와 session key를 redis에 저장한 후, 리턴값으로 session key를 건넨다.
-        // hive server가 존재한다는 조건 하에, hive_id가 오면 user id로 session key가 있는지 찾아본다.
+    public function login($email, $password): User1 {
+        $hiveId = $this->userAccountRepository->isEmailExist($email);
+        if ($hiveId == 0) {
+            throw new InvalidEmailException;
+        }
+        if ($this->userAccountRepository->validatePasswordByHiveId($hiveId, $password))
+            throw new InvalidPasswordException;
 
-        // 건네진 session key로 redis를 조회한 후 일치하면 user id와 session key를 저장한다
+        $user = $this->loginUserService->findUser($hiveId);
 
-        $user = $this->userAccountRepository->findUserByHiveId($hiveId);
-        $userId = $user->getUserId();
-//        if ($this->checkIfAlreadyLoginService->isExists($userId)){
-//
-//        }
-        return $this->checkIfAlreadyLoginService->isExists($userId);
+        return $user;
     }
 }

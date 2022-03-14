@@ -3,12 +3,33 @@
 namespace App\Infrastructure\Persistence\UserAccount;
 
 use App\Domain\UserAccount\LoginUser;
+use App\Domain\UserAccount\UserAccount;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use PDOException;
 use PHPUnit\TextUI\XmlConfiguration\Logging\Logging;
 
 class UserAccountDBRepository extends BaseDBRepository
 {
+
+    public function findUserAccountByHiveId($hiveId): UserAccount {
+        $query = "select hive_id, nation_id, language_id, name, email from user_account where hive_id = :hive_id";
+        $result = null;
+        try{
+            $sth = $this->db->prepare($query);
+            $sth->bindParam(':hive_id', $hiveId);
+
+            $sth->execute();
+
+            $result = $sth->fetch();
+
+            $result = new UserAccount($result["hive_id"], $result["nation_id"]
+                , $result["language_id"], $result["name"], $result["email"]);
+        } catch (PDOException $exception) {
+            Logging::Log($exception);
+        }
+        return $result;
+    }
+
     public function findUserByHiveId($hiveId): LoginUser
     {
         $query = "select u.user_id, a.nation_id, a.language_id, u.level, u.experience, u.gold, u.pearl, u.fatigue
@@ -35,6 +56,28 @@ class UserAccountDBRepository extends BaseDBRepository
         return $user;
     }
 
+    // PK인 hiveId로 접근함으로써 조회 속도를 높이고자 했습니다.
+    public function validatePasswordByHiveId($hiveId, $encryptedPassword): bool {
+        $query = "select password from user_account
+                where hive_id = :hive_id;";
+        $result = false;
+        try {
+            $sth = $this->db->prepare($query);
+            $sth->bindParam(':hive_id', $hiveId);
+
+            $sth->execute();
+
+            $password = $sth->fetch()["password"];
+
+            if (password_verify($password, $encryptedPassword)) {
+                $result = true;
+            }
+        } catch(UserAccountDBException $e) {
+
+        }
+        return $result;
+    }
+
     public function isEmailExist($userEmail): int {
 
         $query = "select hive_id 
@@ -59,7 +102,7 @@ class UserAccountDBRepository extends BaseDBRepository
         return $hiveId;
     }
 
-    public function createUserAccount($createUserAccount) {
+    public function createUserAccount($createUserAccount): UserAccount{
 
         $data =[
             'nation_id' => $createUserAccount->getNationId(),
@@ -70,12 +113,24 @@ class UserAccountDBRepository extends BaseDBRepository
             ];
 
         $query = "insert into user_account(nation_id, language_id, name, email, password) values (:nation_id, :language_id, :name, :email, :password);";
-
+        $result = null;
         try {
+            $this->db->beginTransaction();
+
             $sth = $this->db->prepare($query);
             $sth->execute($data);
+            $hiveId = $this->db->lastInsertId();
+            $this->db->commit();
+
+            try {
+                $result = $this->findUserAccountByHiveId($hiveId);
+            } catch(UserAccountDBException $e) {
+
+            }
         } catch (PDOException $exception) {
+            $this->db->rollBack();
             Logging::Log($exception);
         }
+        return $result;
     }
 }

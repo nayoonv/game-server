@@ -18,6 +18,9 @@ class User1 implements JsonSerializable
 
     private int $fatigue;
 
+    public function getUserId() {
+        return $this->userId;
+    }
     public function __construct($userId, $level, $experience, $gold, $pearl, $fatigue) {
         $this->userId = $userId;
         $this->level = $level;
