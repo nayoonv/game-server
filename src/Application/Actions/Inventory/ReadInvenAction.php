@@ -2,6 +2,8 @@
 
 namespace App\Application\Actions\Inventory;
 
+use App\Service\Inventory\ReadInvenService;
+
 class ReadInvenAction
 {
     private ReadInvenService $readInvenService;

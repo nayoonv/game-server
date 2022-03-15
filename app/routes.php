@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Application\Actions\User\ListUsersAction;
-use App\Application\Actions\User\ViewUserAction;
+use App\Application\Actions\Inventory\ReadInvenAction;
 use App\Application\Actions\UserAccount\CreateUserAccountAction;
 use App\Application\Actions\UserAccount\LoginUserAccountAction;
 use App\Application\Actions\Common\ViewUploadAction;
 use App\Application\Actions\Common\UploadFileAction;
 use App\Application\Middleware\JwtAuthentication;
-
+use App\Application\Actions\Weather\ReadWeatherAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -33,6 +32,9 @@ return function (App $app) {
     $app->group('/auth', function (Group $group) {
         // 2. 유저 인벤토리 목록 조회
         $group->post('/read-inven', ReadInvenAction::class);
+
+        // 7. 날씨 정보 조회
+        $group->post('/read-weather', ReadWeatherAction::class);
 
         $group->post('/db-test', function(Request $request, Response $response) {
             $db = $this->get(PDO::class);
