@@ -21,7 +21,9 @@ class JwtAuthentication implements Middleware
         if (isset($token)) {
             $userId = JWTManager::getInstance()->verifyToken($token);
         }
-        $request = $request->withParsedBody(['user_id'=> $userId]);
+        $result = (array) $request->getParsedBody();
+        $result['user_id'] = $userId;
+        $request = $request->withParsedBody($result);
 
         return $handler->handle($request);
     }

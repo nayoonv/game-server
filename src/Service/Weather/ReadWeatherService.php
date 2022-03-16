@@ -42,8 +42,8 @@ class ReadWeatherService
         $time = date("G");
 
         $temperature = rand(0, 30);
-        $windDirectionId = rand(1, 4);
-        $windSpeed = rand(0, 30);
+        $windDirectionId = rand(1, 8);
+        $windSpeed = rand(0, 20);
 
         $tideInfo = $this->tideDBRepository->findTideByDateAndTime($date, $time);
 

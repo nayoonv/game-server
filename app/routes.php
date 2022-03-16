@@ -12,6 +12,8 @@ use App\Application\Actions\Weather\ReadWeatherAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use App\Application\Actions\Departure\UpdateUserFishingPlaceAction;
+
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
@@ -35,6 +37,12 @@ return function (App $app) {
 
         // 7. 날씨 정보 조회
         $group->post('/read-weather', ReadWeatherAction::class);
+
+        // 목적지 결정 후 출항하기
+        $group->post('/update-user-fishing-place', UpdateUserFishingPlaceAction::class);
+
+        // 목적지에서 낚시하기
+        $group->post('/add-user-fish', AddUserFishAction::class);
 
         $group->post('/db-test', function(Request $request, Response $response) {
             $db = $this->get(PDO::class);
