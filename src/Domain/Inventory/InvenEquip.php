@@ -8,15 +8,26 @@ class InvenEquip
 
     private int $inventoryTypeId;
 
-    private int $userEquipId;
+    private int $equipId;
 
-    private string $userEquipName;
+    private string $equipName;
 
-    public function __construct($inventoryId, $inventoryTypeId, $userEquipId, $userEquipName) {
+    public function __construct($inventoryId, $inventoryTypeId, $equipId) {
         $this->inventoryId = $inventoryId;
         $this->inventoryTypeId = $inventoryTypeId;
-        $this->userEquipId = $userEquipId;
-        $this->userEquipName = $userEquipName;
+        $this->equipId = $equipId;
+    }
+
+    public function getInventoryTypeId() {
+        return $this->inventoryTypeId;
+    }
+
+    public function getEquipId() {
+        return $this->equipId;
+    }
+
+    public function setEquipName($equipName) {
+        $this->equipName = $equipName;
     }
 
     public function jsonSerialize(): array
@@ -25,8 +36,8 @@ class InvenEquip
         return [
             'inventory_id' => $this->inventoryId,
             'inventory_type_id' => $this->inventoryTypeId,
-            'user_fish_id' => $this->userEquipId,
-            'user_fish-name' => $this->userEquipName
+            'user_equip_id' => $this->equipId,
+            'user_equip_name' => $this->equipName
         ];
     }
 }

@@ -9,6 +9,9 @@ use App\Application\Actions\Common\ViewUploadAction;
 use App\Application\Actions\Common\UploadFileAction;
 use App\Application\Middleware\JwtAuthentication;
 use App\Application\Actions\Weather\ReadWeatherAction;
+use App\Application\Actions\Fishing\AddUserFishAction;
+use App\Application\Actions\Fishing\ReadUserCurrentEquipAction;
+
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -41,21 +44,23 @@ return function (App $app) {
         // 목적지 결정 후 출항하기
         $group->post('/update-user-fishing-place', UpdateUserFishingPlaceAction::class);
 
+        $group->post('/read-user-current-equip', ReadUserCurrentEquipAction::class);
         // 목적지에서 낚시하기
         $group->post('/add-user-fish', AddUserFishAction::class);
 
-        $group->post('/db-test', function(Request $request, Response $response) {
-            $db = $this->get(PDO::class);
-            $userId = $request->getParsedBody()["user_id"];
-            $tide = 'user';
-            $sth = $db->prepare("select * from ".$tide." where user_id = ".$userId);
-            $sth->execute();
-            $data = $sth->fetchAll(PDO::FETCH_ASSOC);
-            $payload = json_encode($data);
-            $response->getBody()->write($payload);
-            return $response->withHeader('Content-Type', 'application/json');
-        });
     })->add(new JwtAuthentication());
+
+    $app->post('/db-test', function(Request $request, Response $response) {
+        $db = $this->get(PDO::class);
+//        $userId = $request->getParsedBody()["user_id"];
+        $tide = 'tide';
+        $sth = $db->prepare("select * from ".$tide);
+        $sth->execute();
+        $data = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $payload = json_encode($data);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    });
 
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
         // CORS Pre-Flight OPTIONS Request Handler

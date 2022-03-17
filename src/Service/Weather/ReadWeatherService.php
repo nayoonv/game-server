@@ -47,6 +47,6 @@ class ReadWeatherService
 
         $tideInfo = $this->tideDBRepository->findTideByDateAndTime($date, $time);
 
-        return new Weather($datetime, $temperature, $windDirectionId, $windSpeed, $tideInfo->getTideType(), $tideInfo->getTidePower());
+        return new Weather($datetime, $temperature, $windDirectionId, $windSpeed, $tideInfo->getTideTime(), $tideInfo->getTideType(), $tideInfo->getTidePower());
     }
 }

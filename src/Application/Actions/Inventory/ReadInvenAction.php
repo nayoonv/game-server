@@ -3,6 +3,8 @@
 namespace App\Application\Actions\Inventory;
 
 use App\Service\Inventory\ReadInvenService;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class ReadInvenAction
 {
@@ -17,7 +19,7 @@ class ReadInvenAction
 
         $inventoryInfo = $this->readInvenService->getInvenInfo($userId);
 
-        $response->getBody()->write($inventoryInfo);
+        $response->getBody()->write(json_encode($inventoryInfo, JSON_UNESCAPED_UNICODE));
 
         return $response;
     }

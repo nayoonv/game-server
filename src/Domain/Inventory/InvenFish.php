@@ -26,7 +26,7 @@ class InvenFish
             'inventory_id' => $this->inventoryId,
             'inventory_type_id' => $this->inventoryTypeId,
             'user_fish_id' => $this->userFishId,
-            'user_fish-name' => $this->userFishName
+            'user_fish_name' => $this->userFishName
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\Map;
 
 use App\Domain\Departure\DepartureInfo;
+use App\Domain\UserFishingPlace\UserFishingPlace;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
 class UserMapDBRepository extends BaseDBRepository
@@ -56,7 +57,26 @@ class UserMapDBRepository extends BaseDBRepository
         return $result;
     }
 
+    public function findUserFishingPlaceByUserId($userId) {
+        $query = "select m.map_id, m.max_depth from user_fishing_place u join map m on u.map_id = m.map_id where u.user_id = :user_id";
 
+        $result = false;
+
+        try {
+            $sth = $this->db->prepare($query);
+            $sth->bindParam(':user_id', $userId);
+            $sth->execute();
+
+            $result = $sth->fetch();
+
+            if ($result) {
+                $result = new UserFishingPlace($result['map_id'], $result['max_depth']);
+            }
+        } catch (UserNotExistsException $exception) {
+
+        }
+        return $result;
+    }
     public function createUserMap($userId) {
         $query = "insert into user_fishing_place(user_id) values(:user_id)";
 

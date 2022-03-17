@@ -12,6 +12,8 @@ class Weather
 
     private int $windSpeed;
 
+    private string $tideTime;
+
     private int $tideType;
 
     private int $tidePower;
@@ -32,6 +34,10 @@ class Weather
         return $this->windSpeed;
     }
 
+    public function getTideTime() {
+        return $this->tideTime;
+    }
+
     public function getTideType() {
         return $this->tideType;
     }
@@ -40,11 +46,12 @@ class Weather
         return $this->tidePower;
     }
 
-    public function __construct($time, $temperature, $windDirectionId, $windSpeed, $tideType, $tidePower) {
+    public function __construct($time, $temperature, $windDirectionId, $windSpeed, $tideTime, $tideType, $tidePower) {
         $this->time = $time;
         $this->temperature = $temperature;
         $this->windDirectionId = $windDirectionId;
         $this->windSpeed= $windSpeed;
+        $this->tideTime = $tideTime;
         $this->tideType = $tideType;
         $this->tidePower = $tidePower;
     }
@@ -56,6 +63,7 @@ class Weather
             'temperature' => $this->temperature,
             'wind_direction_id' => $this->windDirectionId,
             'wind_speed' => $this->windSpeed,
+            'tide_time' => $this->tideTime,
             'tide_type' => $this->tideType,
             'tide_power' => $this->tidePower
         ];
