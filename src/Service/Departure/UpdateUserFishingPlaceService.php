@@ -4,6 +4,7 @@ namespace App\Service\Departure;
 
 use App\Domain\Departure\DepartureInfo;
 use App\Infrastructure\Persistence\Map\UserMapDBRepository;
+use App\Service\Boat\GetUserBoatService;
 use App\Service\User\GetUserService;
 use App\Service\Map\GetMapService;
 
@@ -11,6 +12,7 @@ class UpdateUserFishingPlaceService
 {
     private UserMapDBRepository $userMapDBRepository;
     private GetUserService $getUserService;
+    private GetUserBoatService  $getUserBoatService;
     private GetMapService $getMapService;
 
     public function __construct(UserMapDBRepository $userMapDBRepository, GetUserService $getUserService
@@ -24,15 +26,36 @@ class UpdateUserFishingPlaceService
      * @throws UserLevelLimitException
      */
     public function updateUserMap($userId, $mapId): DepartureInfo {
-        // 레벨 제한 거는 부분이 필요하다.
-        if ($this->isAvailableToAccessMap($userId, $mapId)) {
-            $this->userMapDBRepository->updateUserMap($userId, $mapId);
-        }
-        else {
-            throw new UserLevelLimitException();
+        $userInfo = $this->getUserService->getUser($userId);
+        $userBoatInfo = $this->getUserBoatService->getUserBoat($userId);
+        $mapInfo = $this->getMapService->getMap($mapId);
+
+        $result = false;
+
+        try {
+
+            if ($this->isAvailableToDepart($userInfo, $mapInfo, $userBoatInfo)
+                && $this->isAvailableToAccessMap($userId, $mapId)) {
+                /*
+                 * user_fishing_place에서 사용자가 이동하고자 하는 위치로 이동시키고 낚시 중으로 상태를 변경한다.
+                 * fishing = 0 -> 입항, 1 -> 출항
+                 */
+
+                $this->userMapDBRepository->updateUserMap($userId, $mapId);
+            }
+
+            $result = $this->readDepartureInfo($userId, $mapId);
+        } catch(NeedBoatDurabilityException $needBoatDurabilityException) {
+            $result = $needBoatDurabilityException->exceptionResult();
+        } catch (NeedUserFatigueException $needUserFatigueException) {
+            $result = $needUserFatigueException->exceptionResult();
+        } catch (NeedBoatFuelException $needBoatFuelException) {
+            $result = $needBoatFuelException->exceptionResult();
+        } catch (UserLevelLimitException $userLevelLimitException) {
+
         }
 
-        return $this->readDepartureInfo($userId, $mapId);
+        return $result;
     }
 
     public function readDepartureInfo($userId, $mapId) {
@@ -46,12 +69,36 @@ class UpdateUserFishingPlaceService
 
         return $result;
     }
+    // 출항 가능한지 체크
+    public function isAvailableToDepart($userInfo, $mapInfo, $userBoatInfo): bool {
+        $userFatigue = $userInfo->getFatigue();
+        $costToSail = $mapInfo->getCostToSail();
+        $timeToSail = $mapInfo->getTimeToSail();
+        $reducedDurability = $mapInfo->getReducedDurability();
+        $boatDurability = $userBoatInfo->getUserBoatDurability();
+        $boatFuel = $userBoatInfo->getUserBoatFuel();
+        if ($boatDurability - $reducedDurability < 0) {
+            throw new NeedBoatDurabilityException();
+        }
+        if ($userFatigue >= $timeToSail) {
+            throw new NeedUserFatigueException();
+        }
+        if ($boatFuel - $costToSail < 0) {
+            throw new NeedBoatFuelException();
+        }
+        return true;
+    }
 
-    public function isAvailableToAccessMap($userId, $mapId): bool {
-        $userLevel =  (int) $this->getUserService->getUserLevel($userId);
-        $levelLimit = (int) $this->getMapService->getMapLevelLimit($mapId);
+    // 출항 가능 레벨인지 체크
+    public function isAvailableToAccessMap($userInfo, $mapInfo): bool {
+        $userLevel =  (int) $userInfo->getLevel();
+        $levelLimit = (int) $mapInfo->getLevelLimit();
         if ($userLevel >= $levelLimit)
             return true;
-        return false;
+        throw new UserLevelLimitException();
+    }
+
+    public function updateFishingStatus($userId, $fishing) {
+        $this->userMapDBRepository->updateFishing($userId, $fishing);
     }
 }

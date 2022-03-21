@@ -12,8 +12,8 @@ class GetUserService
         $this->userDBRepository = $userDBRepository;
     }
 
-    public function getUserLevel($userId) {
+    public function getUser($userId) {
         // 해당 유저가 없을 수도 있음
-        return $this->userDBRepository->findLevelByUserId($userId);
+        return $this->userDBRepository->findByUserId($userId);
     }
 }

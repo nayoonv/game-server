@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Persistence\Boat;
 
+use App\Domain\Boat\UserBoat;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
 class UserBoatDBRepository extends BaseDBRepository
@@ -15,6 +16,43 @@ class UserBoatDBRepository extends BaseDBRepository
             $sth = $this->db->prepare($query);
             $sth->bindParam(':user_id', $userId);
 
+            $sth->execute();
+
+            $this->db->commit();
+
+        } catch(Exception $e) {
+
+        }
+    }
+    public function findByUserId($userId) {
+        $query = "select * from user_boat where user_id = :user_id";
+        $data = [
+            ":user_id" => $userId
+        ];
+        $result = false;
+        try {
+            $sth = $this->db->prepare($query);
+            $sth->execute($data);
+
+            $result = $sth->fetch();
+            if ($result) {
+                $result = new UserBoat($result['user_boat_level'], $result['user_boat_durability'], $result['user_boat_fuel']);
+            }
+        } catch (UserBoatNotExistsException $exception) {
+
+        }
+        return $result;
+    }
+    public function updateUserBoatDurability($userId, $mapId, $durability) {
+        $query = "update user_boat set map_id = :map_id and user_boat_durability = :durability where user_id = :user_id;";
+
+        try {
+            $this->db->beginTransaction();
+
+            $sth = $this->db->prepare($query);
+            $sth->bindParam(':user_id', $userId);
+            $sth->bindParam(':map_id', $mapId);
+            $sth->bindParam(':durability', $durability);
             $sth->execute();
 
             $this->db->commit();

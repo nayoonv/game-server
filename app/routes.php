@@ -11,6 +11,11 @@ use App\Application\Middleware\JwtAuthentication;
 use App\Application\Actions\Weather\ReadWeatherAction;
 use App\Application\Actions\Fishing\AddUserFishAction;
 use App\Application\Actions\Fishing\ReadUserCurrentEquipAction;
+use App\Application\Actions\Arrival\UpdateUserFishBeforeCalAction;
+use App\Application\Actions\Fishing\UpdateUserBoatDurabilityAction;
+use App\Application\Actions\Arrival\UpdateAfterFishingAction;
+use App\Application\Actions\GiftBox\ReadUserGiftBoxAction;
+use App\Application\Actions\GiftBox\UpdateUserGiftBoxReceivedAction;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -37,7 +42,8 @@ return function (App $app) {
     $app->group('/auth', function (Group $group) {
         // 2. 유저 인벤토리 목록 조회
         $group->post('/read-inven', ReadInvenAction::class);
-
+//        // 채비 변경 - 낚싯대
+//        $group->post('/update-u')
         // 7. 날씨 정보 조회
         $group->post('/read-weather', ReadWeatherAction::class);
 
@@ -45,8 +51,20 @@ return function (App $app) {
         $group->post('/update-user-fishing-place', UpdateUserFishingPlaceAction::class);
 
         $group->post('/read-user-current-equip', ReadUserCurrentEquipAction::class);
-        // 목적지에서 낚시하기
+        // 목적지에서 물고기 잡기(인벤토리 추가)
         $group->post('/add-user-fish', AddUserFishAction::class);
+
+        // 보로롱24호 내구도 감소
+        $group->post('/update-user-boat-durability', UpdateUserBoatDurabilityAction::class);
+
+        $group->post('/update-after-fishing', UpdateAfterFishingAction::class);
+
+        // 정산
+        $group->post('/update-user-fish-before-cal', UpdateUserFishBeforeCalAction::class);
+
+        // 선물함
+        $group->post('/read-user-gift-box', ReadUserGiftBoxAction::class);
+        $group->post('/update-user-gift-box-received', UpdateUserGiftBoxReceivedAction::class);
 
     })->add(new JwtAuthentication());
 

@@ -9,7 +9,7 @@ use App\Infrastructure\Persistence\Base\BaseDBRepository;
 class UserMapDBRepository extends BaseDBRepository
 {
     public function updateUserMap($userId, $mapId) {
-        $query = "update user_fishing_place set map_id = :map_id where user_id = :user_id;";
+        $query = "update user_fishing_place set map_id = :map_id and fishing = 1 where user_id = :user_id;";
 
         try {
             $this->db->beginTransaction();
@@ -17,6 +17,24 @@ class UserMapDBRepository extends BaseDBRepository
             $sth = $this->db->prepare($query);
             $sth->bindParam(':user_id', $userId);
             $sth->bindParam(':map_id', $mapId);
+            $sth->execute();
+
+            $this->db->commit();
+
+        } catch(Exception $e) {
+
+        }
+    }
+
+    public function updateFishingStatus($userId, $fishing) {
+        $query = "update user_fishing_place set fishing = :fishing where user_id = :user_id;";
+
+        try {
+            $this->db->beginTransaction();
+
+            $sth = $this->db->prepare($query);
+            $sth->bindParam(':user_id', $userId);
+            $sth->bindParam(':fishing', $fishing);
             $sth->execute();
 
             $this->db->commit();
@@ -58,7 +76,7 @@ class UserMapDBRepository extends BaseDBRepository
     }
 
     public function findUserFishingPlaceByUserId($userId) {
-        $query = "select m.map_id, m.max_depth from user_fishing_place u join map m on u.map_id = m.map_id where u.user_id = :user_id";
+        $query = "select m.map_id, m.max_depth, u.fishing from user_fishing_place u join map m on u.map_id = m.map_id where u.user_id = :user_id";
 
         $result = false;
 
@@ -70,7 +88,7 @@ class UserMapDBRepository extends BaseDBRepository
             $result = $sth->fetch();
 
             if ($result) {
-                $result = new UserFishingPlace($result['map_id'], $result['max_depth']);
+                $result = new UserFishingPlace($result['map_id'], $result['max_depth'], $result['fishing']);
             }
         } catch (UserNotExistsException $exception) {
 

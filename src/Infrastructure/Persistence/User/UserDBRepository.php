@@ -56,22 +56,4 @@ class UserDBRepository extends BaseDBRepository implements User1Repository
         }
         return $userId;
     }
-
-    public function findLevelByUserId($userId) {
-        $query = "select level from user where user_id = :user_id";
-
-        $level = 0;
-        try {
-            $sth = $this->db->prepare($query);
-
-            $sth->bindParam(":user_id", $userId);
-
-            $sth->execute();
-
-            $level = $sth->fetch()["level"];
-        } catch (UserDBException $exception) {
-
-        }
-        return $level;
-    }
 }

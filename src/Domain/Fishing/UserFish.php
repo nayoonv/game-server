@@ -52,7 +52,6 @@ class UserFish
             'catch_date' => $this->catchDate,
             'length' => $this->length,
             'weight' => $this->weight,
-            'before_cal' => $this->beforeCal
         ];
     }
 }

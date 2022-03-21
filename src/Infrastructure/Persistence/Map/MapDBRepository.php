@@ -2,14 +2,15 @@
 
 namespace App\Infrastructure\Persistence\Map;
 
+use App\Domain\Map\Map;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
 class MapDBRepository extends BaseDBRepository
 {
-    public function findLevelLimitByMapId($mapId) {
-        $query = "select level_limit from map where map_id = :map_id";
+    public function findByMapId($mapId) {
+        $query = "select * from map where map_id = :map_id";
 
-        $levelLimit = 0;
+        $result = false;
         try {
             $sth = $this->db->prepare($query);
 
@@ -17,14 +18,15 @@ class MapDBRepository extends BaseDBRepository
 
             $sth->execute();
 
-            $levelLimit = $sth->fetch();
-            if (!$levelLimit)
-                $levelLimit = $levelLimit["level_limit"];
+            $result = $sth->fetch();
+
+            if ($result)
+                $result = new Map($result['map_id'], $result['map_name'], $result['distance'], $result['cost_to_sail']
+                    , $result['time_to_sail'], $result['level_limit'], $result['reduced_durability']);
 
         } catch (MapDBException $exception) {
 
         }
-
-        return $levelLimit;
+        return $result;
     }
 }

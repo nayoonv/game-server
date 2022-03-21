@@ -15,9 +15,9 @@ class GetMapService
         $this->userMapDBRepository = $userMapDBRepository;
     }
 
-    public function getMapLevelLimit($mapId) {
+    public function getMap($mapId) {
         // 해당 맵이 없을 수도 있음
-        return $this->mapDBRepository->findLevelLimitByMapId($mapId);
+        return $this->mapDBRepository->findByMapId($mapId);
     }
 
     public function getUserFishingPlace($userId) {
