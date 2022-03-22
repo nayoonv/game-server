@@ -16,6 +16,9 @@ use App\Application\Actions\Fishing\UpdateUserBoatDurabilityAction;
 use App\Application\Actions\Arrival\UpdateAfterFishingAction;
 use App\Application\Actions\GiftBox\ReadUserGiftBoxAction;
 use App\Application\Actions\GiftBox\UpdateUserGiftBoxReceivedAction;
+use App\Application\Actions\Book\ReadUserBookAction;
+use App\Application\Actions\Auction\AddUserFishCostAction;
+use App\Application\Actions\Auction\ReadUserFishAuction;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -57,7 +60,14 @@ return function (App $app) {
         // 보로롱24호 내구도 감소
         $group->post('/update-user-boat-durability', UpdateUserBoatDurabilityAction::class);
 
+        // 입항
         $group->post('/update-after-fishing', UpdateAfterFishingAction::class);
+
+        // 경매 성공
+        $group->post('/add-user-fish-cost', AddUserFishCostAction::class);
+        $group->post('/read-user-fish-auction', ReadUserFishAuction::class);
+        // 도감 보여주기
+        $group->post('/read-user-book', ReadUserBookAction::class);
 
         // 정산
         $group->post('/update-user-fish-before-cal', UpdateUserFishBeforeCalAction::class);

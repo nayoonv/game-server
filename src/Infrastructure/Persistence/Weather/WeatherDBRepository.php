@@ -22,7 +22,7 @@ class WeatherDBRepository extends BaseDBRepository
                     , $result["wind_speed"], $result["tide_time"], $result["tide_type"], $result["tide_power"]);
             }
         } catch(Exception $e) {
-
+            throw new WeatherDBException();
         }
         return $result;
     }
@@ -51,7 +51,7 @@ class WeatherDBRepository extends BaseDBRepository
 
             $this->db->commit();
         } catch(Exception $e) {
-
+            throw new WeatherDBException();
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence\Inventory;
 use App\Domain\Inventory\InvenEquip;
 use App\Domain\Inventory\InvenFish;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
+use PDOException;
 
 class InvenDBRepository extends BaseDBRepository
 {
@@ -32,8 +33,8 @@ class InvenDBRepository extends BaseDBRepository
                 }
             }
 
-        } catch(Exception $exception) {
-
+        } catch(PDOException $exception) {
+            throw new InvenDBException();
         }
 
         return $result;
@@ -64,7 +65,7 @@ class InvenDBRepository extends BaseDBRepository
             }
 
         } catch(Exception $exception) {
-
+            throw new InvenDBException();
         }
 
         return $result;
@@ -85,8 +86,8 @@ class InvenDBRepository extends BaseDBRepository
 
             $this->db->commit();
 
-        } catch (InvenInsertFishException $exception) {
-
+        } catch (PDOException $exception) {
+            throw new InvenInsertFishException();
         }
     }
 }

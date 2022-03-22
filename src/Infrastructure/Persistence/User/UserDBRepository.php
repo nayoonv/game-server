@@ -19,7 +19,7 @@ class UserDBRepository extends BaseDBRepository implements User1Repository
 
             $sth->execute();
 
-            $result = $sth->fetch();
+             $result = $sth->fetch();
 
             $user = new User1($userId, $result["level"], $result["experience"], $result["gold"]
                 , $result["pearl"], $result["fatigue"]);

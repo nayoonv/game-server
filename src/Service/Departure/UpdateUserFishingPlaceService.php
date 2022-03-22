@@ -16,9 +16,10 @@ class UpdateUserFishingPlaceService
     private GetMapService $getMapService;
 
     public function __construct(UserMapDBRepository $userMapDBRepository, GetUserService $getUserService
-        , GetMapService $getMapService) {
+        ,GetUserBoatService  $getUserBoatService, GetMapService $getMapService) {
         $this->userMapDBRepository = $userMapDBRepository;
         $this->getUserService = $getUserService;
+        $this->getUserBoatService = $getUserBoatService;
         $this->getMapService = $getMapService;
     }
 
@@ -35,18 +36,22 @@ class UpdateUserFishingPlaceService
         try {
 
             if ($this->isAvailableToDepart($userInfo, $mapInfo, $userBoatInfo)
-                && $this->isAvailableToAccessMap($userId, $mapId)) {
+                && $this->isAvailableToAccessMap($userInfo, $mapInfo)) {
                 /*
                  * user_fishing_place에서 사용자가 이동하고자 하는 위치로 이동시키고 낚시 중으로 상태를 변경한다.
                  * fishing = 0 -> 입항, 1 -> 출항
                  */
 
                 $this->userMapDBRepository->updateUserMap($userId, $mapId);
+
+                $result = $this->readDepartureInfo($userId, $mapId);
+//                else
+//                    throw new Upd
             }
 
-            $result = $this->readDepartureInfo($userId, $mapId);
-        } catch(NeedBoatDurabilityException $needBoatDurabilityException) {
-            $result = $needBoatDurabilityException->exceptionResult();
+//            $result = $this->readDepartureInfo($userId, $mapId);
+        } catch(NeedBoatDurabilityException $e) {
+            $result = $e->response();
         } catch (NeedUserFatigueException $needUserFatigueException) {
             $result = $needUserFatigueException->exceptionResult();
         } catch (NeedBoatFuelException $needBoatFuelException) {
@@ -99,6 +104,6 @@ class UpdateUserFishingPlaceService
     }
 
     public function updateFishingStatus($userId, $fishing) {
-        $this->userMapDBRepository->updateFishing($userId, $fishing);
+        $this->userMapDBRepository->updateFishingStatus($userId, $fishing);
     }
 }

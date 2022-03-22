@@ -1,14 +1,21 @@
 <?php
 
-namespace App\Service\Fishing;
+namespace App\Service\Fish;
 
 use App\Domain\Fishing\FishingFish;
+
 use App\Infrastructure\Persistence\Fish\FishDBRepository;
+use App\Infrastructure\Persistence\Fish\NotInsertUserFishException;
+use App\Infrastructure\Persistence\Fish\UserFishDBException;
 use App\Infrastructure\Persistence\Fish\UserFishDBRepository;
+use App\Infrastructure\Persistence\Inventory\InvenInsertFishException;
+
 use App\Service\Inventory\InsertInvenService;
 use App\Service\Map\GetMapService;
 use App\Service\UserCurrentEquip\GetUserCurrentEquipService;
 use App\Service\Weather\ReadWeatherService;
+
+use App\Util\SuccessResponseManager;
 
 class AddUserFishService
 {
@@ -32,29 +39,49 @@ class AddUserFishService
     }
 
     public function getUserFish($userId, $depth) {
+
         // 물고기 잡기
-        $userFish = $this->Fishing($userId, $depth);
-
-        if ($userFish == false) {
-            return "물고기 잡기 실패";
-        }
         try {
-            // 잡은 물고기 insert
-            $this->InsertInvenFish($userId, $userFish);
-        } catch(NotInsertUserFishException $exception) {
+            $userFish = $this->Fishing($userId, $depth);
 
+            $this->InsertInvenFish($userId, $userFish);
+
+            return SuccessResponseManager::response($userFish);
+        } catch (DeepDepthException $e) {
+            return $e->exceptionResult();
+        } catch(NotInsertUserFishException $e) {
+            return $e->exceptionResult();
+        } catch(FailToCatchFishException $e) {
+            return $e->exceptionResult();
+        } catch(NotAppearFishException $e) {
+            return $e->exceptionResult();
+        } catch(UserFishDBException $e) {
+            return $e->response();
+        } catch (InvenInsertFishException $e) {
+            return $e->exceptionResult();
         }
-        return json_encode($userFish->jsonSerialize());
     }
     public function InsertInvenFish($userId, $userFish) {
         date_default_timezone_set("Asia/Seoul");
         $datetime = date("Y-m-d H:i:s", time());
 
-        $userFishId = $this->userFishDBRepository->insertUserFish($userId, $userFish->getFishId(), $userFish->getLength(), $userFish->getWeight(), $datetime);
+        try {
+            $userFishId = $this->userFishDBRepository->insertUserFish($userId, $userFish->getFishId(), $userFish->getLength(), $userFish->getWeight(), $datetime);
+            $this->insertInventoryService->insertInvenFish($userFishId, $userId, $datetime);
+        } catch(UserFishDBException $e) {
+            throw $e;
+        } catch(InvenInsertFishException $e) {
+            throw $e;
+        }
 
-        $this->insertInventoryService->insertInvenFish($userFishId, $userId, $datetime);
+
     }
 
+    /**
+     * @throws NotAppearFishException
+     * @throws FailToCatchFishException
+     * @throws DeepDepthException
+     */
     public function Fishing($userId, $depth) {
         // 사용자의 장비에 대한 정보를 가지고 와야한다.
         $userCurrentEquipInfo = $this->getUserCurrentEquipService->getUserCurrentEquipInfo($userId);
@@ -64,12 +91,13 @@ class AddUserFishService
 
         if($mapInfo->getMaxDepth() < $depth) {
             // 너무 깊이 던진 경우
+            throw new DeepDepthException();
         }
         $appearance = $this->FishApperanceProbability($userId, $mapInfo, $userCurrentEquipInfo->getHook(), $depth);
 
         if (!$appearance) {
             // 물고기가 등장하지 않는 경우
-            return false;
+            throw new NotAppearFishException();
         }
         $gradeInfo = $this->FishGradeProbability($mapInfo, $depth, $userCurrentEquipInfo->getBait());
 
@@ -80,8 +108,8 @@ class AddUserFishService
         // 실패할 수 있음
         $result = $this->CatchFish($fish, $userCurrentEquipInfo);
 
-        if ($result == false) {
-            return false;
+        if (!$result) {
+            throw new FailToCatchFishException();
         }
         return $fish;
     }
@@ -174,7 +202,7 @@ class AddUserFishService
     }
 
     public function randomFunction($probability, $cases) {
-        if ($probability > 70)
+        if ($probability > 10)
             return $cases;
         else if ($probability > 50)
             return $cases - 1;

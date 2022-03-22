@@ -20,7 +20,7 @@ class ReadUserCurrentEquipAction
 
         $fishInfo = $this->getUserCurrentEquipService->getUserCurrentEquipInfo($userId);
 
-        $response->getBody()->write(json_encode($fishInfo->jsonSerialize()));
+        $response->getBody()->write(json_encode($fishInfo));
 
         return $response;
     }

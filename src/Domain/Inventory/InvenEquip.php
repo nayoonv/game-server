@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Inventory;
+use JsonSerializable;
 
-class InvenEquip
+class InvenEquip implements JsonSerializable
 {
     private int $inventoryId;
 

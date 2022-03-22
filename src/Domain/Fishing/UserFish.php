@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Fishing;
+use JsonSerializable;
 
-class UserFish
+class UserFish implements JsonSerializable
 {
     private int $userFishId;
 
@@ -42,7 +43,9 @@ class UserFish
     public function getWeight() {
         return $this->weight;
     }
-
+    public function getCatchDate() {
+        return $this->catchDate;
+    }
     public function jsonSerialize(): array {
         return [
             'user_fish_id' => $this->userFishId,

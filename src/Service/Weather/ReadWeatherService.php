@@ -3,8 +3,11 @@
 namespace App\Service\Weather;
 
 use App\Domain\Weather\Weather;
+use App\Infrastructure\Persistence\Weather\TideDBException;
 use App\Infrastructure\Persistence\Weather\TideDBRepository;
+use App\Infrastructure\Persistence\Weather\WeatherDBException;
 use App\Infrastructure\Persistence\Weather\WeatherDBRepository;
+use App\Util\SuccessResponseManager;
 
 class ReadWeatherService
 {
@@ -18,21 +21,29 @@ class ReadWeatherService
 
     public function getWeatherInfo($userId) {
 
-        // 먼저 weather 검색
-        $result = $this->weatherDBRepository->findWeatherByUserId($userId);
+        try {
+            // 먼저 weather 검색
+            $result = $this->weatherDBRepository->findWeatherByUserId($userId);
 
-        // 주어진 날짜에 정보가 없으면 여기서 데이터를 만든다.
-        if ($result == null || !$result) {
-            // 온도 랜덤으로 지정, 풍향 랜덤으로 지정,
-            $result = $this->makeWeatherInfo();
-            // 데이터를 만들어서 insert한다.
-            $this->weatherDBRepository->insertWeatherByUserId($userId, $result);
+            // 주어진 날짜에 정보가 없으면 여기서 데이터를 만든다.
+            if ($result == null || !$result) {
+                // 온도 랜덤으로 지정, 풍향 랜덤으로 지정,
+                $result = $this->makeWeatherInfo();
+                // 데이터를 만들어서 insert한다.
+                $this->weatherDBRepository->insertWeatherByUserId($userId, $result);
+            }
+
+            if (!$result)
+                throw new NotReadWeatherException;
+
+            return $result;
+        } catch (TideDBException $e) {
+            return $e->response();
+        } catch (NotReadWeatherException $e) {
+            return $e->response();
+        } catch (WeatherDBException $e) {
+            return $e->response();
         }
-
-        if (!$result)
-            throw new NotReadWeatherException;
-
-        return $result;
     }
 
     public function makeWeatherInfo() {
@@ -44,9 +55,11 @@ class ReadWeatherService
         $temperature = rand(0, 30);
         $windDirectionId = rand(1, 8);
         $windSpeed = rand(0, 20);
-
-        $tideInfo = $this->tideDBRepository->findTideByDateAndTime($date, $time);
-
-        return new Weather($datetime, $temperature, $windDirectionId, $windSpeed, $tideInfo->getTideTime(), $tideInfo->getTideType(), $tideInfo->getTidePower());
+        try {
+            $tideInfo = $this->tideDBRepository->findTideByDateAndTime($date, $time);
+            return new Weather($datetime, $temperature, $windDirectionId, $windSpeed, $tideInfo->getTideTime(), $tideInfo->getTideType(), $tideInfo->getTidePower());
+        } catch (TideDBException $e) {
+            throw $e;
+        }
     }
 }

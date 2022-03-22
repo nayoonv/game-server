@@ -5,11 +5,12 @@ namespace App\Infrastructure\Persistence\Map;
 use App\Domain\Departure\DepartureInfo;
 use App\Domain\UserFishingPlace\UserFishingPlace;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
+use App\Service\Fish\NotFishingStatusException;
 
 class UserMapDBRepository extends BaseDBRepository
 {
     public function updateUserMap($userId, $mapId) {
-        $query = "update user_fishing_place set map_id = :map_id and fishing = 1 where user_id = :user_id;";
+        $query = "update user_fishing_place set map_id = :map_id, fishing = 1 where user_id = :user_id;";
 
         try {
             $this->db->beginTransaction();
@@ -29,6 +30,7 @@ class UserMapDBRepository extends BaseDBRepository
     public function updateFishingStatus($userId, $fishing) {
         $query = "update user_fishing_place set fishing = :fishing where user_id = :user_id;";
 
+        $result = 0;
         try {
             $this->db->beginTransaction();
 
@@ -39,9 +41,12 @@ class UserMapDBRepository extends BaseDBRepository
 
             $this->db->commit();
 
+            $result = $sth->fetchColumn();
+
         } catch(Exception $e) {
 
         }
+        return $result;
     }
 
     public function findDepartureInfoByUserId($userId, $mapId) {

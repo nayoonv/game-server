@@ -6,6 +6,7 @@ use App\Domain\UserCurrentEquip\UserCurrentEquipDetail;
 use App\Infrastructure\Persistence\UserCurrentEquip\UserCurrentEquipDBRepository;
 use App\Service\Equip\GetEquipService;
 use App\Service\UserEquip\GetUserEquipService;
+use App\Util\SuccessResponseManager;
 
 class GetUserCurrentEquipService
 {

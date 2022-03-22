@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\UserGiftBox;
+use JsonSerializable;
 
-class UserGiftBox
+class UserGiftBox implements JsonSerializable
 {
     private int $userGiftBoxId;
 

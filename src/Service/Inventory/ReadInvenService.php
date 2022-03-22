@@ -2,8 +2,10 @@
 
 namespace App\Service\Inventory;
 
+use App\Infrastructure\Persistence\Inventory\InvenDBException;
 use App\Infrastructure\Persistence\Inventory\InvenDBRepository;
 use App\Service\Equip\GetEquipService;
+use App\Util\SuccessResponseManager;
 
 class ReadInvenService
 {
@@ -16,19 +18,23 @@ class ReadInvenService
     }
 
     public function getInvenInfo($userId) {
-        $inventoryFishList = $this->invenDBRepository->findInventoryFishByUserId($userId);
-        $inventoryEquipList = $this->getInvenEquipDetailInfo($this->invenDBRepository->findInventoryEquipByUserId($userId));
+        try {
+            $inventoryFishList = $this->invenDBRepository->findInventoryFishByUserId($userId);
+            $inventoryEquipList = $this->getInvenEquipDetailInfo($this->invenDBRepository->findInventoryEquipByUserId($userId));
 
-        return $this->getList($inventoryFishList, $inventoryEquipList);
+            return SuccessResponseManager::response($this->getList($inventoryFishList, $inventoryEquipList));
+        } catch (InvenDBException $e) {
+            return $e->response();
+        }
     }
 
     public function getList($inventoryFishList, $inventoryEquipList) {
         $result = array();
         foreach($inventoryFishList as &$fish) {
-            array_push($result, $fish->jsonSerialize());
+            array_push($result, $fish);
         }
         foreach($inventoryEquipList as &$equip) {
-            array_push($result, $equip->jsonSerialize());
+            array_push($result, $equip);
         }
         return $result;
     }
@@ -37,20 +43,29 @@ class ReadInvenService
 
         $len = count($inventoryEquipList);
         for($i = 0; $i < $len; $i++) {
-//            $equip = $inventoryEquipList[$i];
-            $preparationId = $this->getEquipService->getPreparation($inventoryEquipList[$i]->getEquipId())->getPreparationId();
-            if ($inventoryEquipList[$i]->getInventoryTypeId() == 1)
-                $inventoryEquipList[$i]->setEquipName($this->getEquipService->getRodName($preparationId));
-            else if ($inventoryEquipList[$i]->getInventoryTypeId() == 2)
-                $inventoryEquipList[$i]->setEquipName($this->getEquipService->getLineName($preparationId));
-            else if ($inventoryEquipList[$i]->getInventoryTypeId() == 3)
-                $inventoryEquipList[$i]->setEquipName($this->getEquipService->getReelName($preparationId));
-            else if ($inventoryEquipList[$i]->getInventoryTypeId() == 4)
-                $inventoryEquipList[$i]->setEquipName($this->getEquipService->getHookName($preparationId));
-            else if ($inventoryEquipList[$i]->getInventoryTypeId() == 5)
-                $inventoryEquipList[$i]->setEquipName($this->getEquipService->getBaitName($preparationId));
-            else if ($inventoryEquipList[$i]->getInventoryTypeId() == 6)
-                $inventoryEquipList[$i]->setEquipName($this->getEquipService->getSinkerName($preparationId));
+            $preparation = $this->getEquipService->getPreparation($inventoryEquipList[$i]->getEquipId());
+            $preparationId = $preparation->getPreparationId();
+            $preparationType = $preparation->getPreparationTypeId();
+            switch($preparationType) {
+                case 1:
+                    $inventoryEquipList[$i]->setEquipName($this->getEquipService->getRodName($preparationId));
+                    break;
+                case 2:
+                    $inventoryEquipList[$i]->setEquipName($this->getEquipService->getLineName($preparationId));
+                    break;
+                case 3:
+                    $inventoryEquipList[$i]->setEquipName($this->getEquipService->getReelName($preparationId));
+                    break;
+                case 4:
+                    $inventoryEquipList[$i]->setEquipName($this->getEquipService->getHookName($preparationId));
+                    break;
+                case 5:
+                    $inventoryEquipList[$i]->setEquipName($this->getEquipService->getBaitName($preparationId));
+                    break;
+                case 6:
+                    $inventoryEquipList[$i]->setEquipName($this->getEquipService->getSinkerName($preparationId));
+                    break;
+            }
         }
         return $inventoryEquipList;
     }

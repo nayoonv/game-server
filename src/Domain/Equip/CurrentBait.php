@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Equip;
+use JsonSerializable;
 
-class CurrentBait
+class CurrentBait implements JsonSerializable
 {
     private int $baitId;
 

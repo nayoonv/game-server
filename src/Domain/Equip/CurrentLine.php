@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Equip;
+use JsonSerializable;
 
-class CurrentLine
+class CurrentLine implements JsonSerializable
 {
     private int $lineId;
 

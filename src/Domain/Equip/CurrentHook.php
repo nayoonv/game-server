@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Equip;
+use JsonSerializable;
 
-class CurrentHook
+class CurrentHook implements JsonSerializable
 {
     private int $hookId;
 

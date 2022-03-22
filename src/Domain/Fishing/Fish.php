@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Fishing;
+use JsonSerializable;
 
-class Fish
+class Fish implements JsonSerializable
 {
     private int $fishId;
 

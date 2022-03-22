@@ -24,7 +24,7 @@ class UpdateUserFishingPlaceAction
         if (!$mapInfo) {
             $response->getBody()->write("Nothing to show");
         } else{
-            $response->getBody()->write(json_encode($mapInfo->jsonSerialize()));
+            $response->getBody()->write(json_encode($mapInfo));
         }
         return $response;
     }

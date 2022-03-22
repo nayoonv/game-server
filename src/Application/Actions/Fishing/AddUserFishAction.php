@@ -2,7 +2,7 @@
 
 namespace App\Application\Actions\Fishing;
 
-use App\Service\Fishing\AddUserFishService;
+use App\Service\Fish\AddUserFishService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -21,7 +21,7 @@ class AddUserFishAction
 
         $fishInfo = $this->addUserFishService->getUserFish($userId, $depth);
 
-        $response->getBody()->write($fishInfo);
+        $response->getBody()->write(json_encode($fishInfo, JSON_UNESCAPED_UNICODE));
 
         return $response;
     }

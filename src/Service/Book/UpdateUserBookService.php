@@ -12,7 +12,8 @@ class UpdateUserBookService
         $this->userBookDBRepository = $userBookDBRepository;
     }
 
-    public function addNewFish($userId) {
-        $fishList = $this->userBookDBRepository->findNewFish($userId);
+    public function addFish($userId, $fishes) {
+        foreach($fishes as &$fish)
+            $this->userBookDBRepository->insertFish($userId, $fish);
     }
 }

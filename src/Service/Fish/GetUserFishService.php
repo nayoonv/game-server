@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Service\Fishing;
+namespace App\Service\Fish;
 
+use App\Infrastructure\Persistence\Fish\UserFishDBException;
 use App\Infrastructure\Persistence\Fish\UserFishDBRepository;
 
 class GetUserFishService
@@ -13,5 +14,15 @@ class GetUserFishService
     public function getUserFishWhileFishing($userId){
         $userFishList = $this->userFishDBRepository->findBeforeCalUnchecked($userId);
         return $userFishList;
+    }
+    public function getUserFishNotInUserBook($userId) {
+        return $this->userFishDBRepository->findNotInUserBookByUserId($userId);
+    }
+    public function getUserFish($userFishId) {
+        try {
+            return $this->userFishDBRepository->findByUserFishId($userFishId);
+        } catch(UserFishDBException $e) {
+            throw $e;
+        }
     }
 }

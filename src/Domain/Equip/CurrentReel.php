@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Equip;
+use JsonSerializable;
 
-class CurrentReel
+class CurrentReel implements JsonSerializable
 {
     private int $reelId;
 

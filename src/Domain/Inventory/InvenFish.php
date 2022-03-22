@@ -2,7 +2,9 @@
 
 namespace App\Domain\Inventory;
 
-class InvenFish
+use JsonSerializable;
+
+class InvenFish implements JsonSerializable
 {
     private int $inventoryId;
 

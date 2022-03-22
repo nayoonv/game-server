@@ -2,7 +2,9 @@
 
 namespace App\Domain\Weather;
 
-class Tide
+use JsonSerializable;
+
+class Tide implements JsonSerializable
 {
     private string $tideTime;
 

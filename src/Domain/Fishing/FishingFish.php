@@ -2,7 +2,9 @@
 
 namespace App\Domain\Fishing;
 
-class FishingFish
+use JsonSerializable;
+
+class FishingFish implements JsonSerializable
 {
     private int $fishId;
 

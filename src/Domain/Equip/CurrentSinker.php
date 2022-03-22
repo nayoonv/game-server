@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Equip;
+use JsonSerializable;
 
-class CurrentSinker
+class CurrentSinker implements JsonSerializable
 {
     private int $sinkerId;
 

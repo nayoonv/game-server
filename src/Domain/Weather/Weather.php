@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Weather;
+use JsonSerializable;
 
-class Weather
+class Weather implements JsonSerializable
 {
     private string $time;
 

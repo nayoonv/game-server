@@ -8,8 +8,9 @@ use App\Domain\Equip\CurrentLine;
 use App\Domain\Equip\CurrentReel;
 use App\Domain\Equip\CurrentRod;
 use App\Domain\Equip\CurrentSinker;
+use JsonSerializable;
 
-class UserCurrentEquipDetail
+class UserCurrentEquipDetail implements JsonSerializable
 {
     private CurrentRod $rod;
 

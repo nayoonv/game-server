@@ -4,7 +4,7 @@ namespace App\Service\Boat;
 
 use App\Infrastructure\Persistence\Boat\UserBoatDBRepository;
 use App\Service\Departure\NeedBoatDurabilityException;
-use App\Service\Fishing\NotFishingStatusException;
+use App\Service\Fish\NotFishingStatusException;
 use App\Service\Map\GetMapService;
 
 class UpdateUserBoatWhileFishingService
@@ -36,12 +36,12 @@ class UpdateUserBoatWhileFishingService
                         $this->userBoatDBRepository->updateUserBoatDurability($userId, $mapInfo->getMapId(), $reducedDurability);
                         return $reducedDurability;
                     }
-                } catch(NeedBoatDurabilityException $needBoatDurabilityException) {
-                    return $needBoatDurabilityException->exceptionResult();
+                } catch(NeedBoatDurabilityException $e) {
+                    return $e->response();
                 }
             }
-        } catch(NotFishingStatusException $notFishingStatusException) {
-            return $notFishingStatusException->exceptionResult("출항");
+        } catch(NotFishingStatusException $e) {
+            return $e->response();
         }
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Application\Actions\Arrival;
 
-use App\Service\Arrival\UpdateUserFishService;
+use App\Service\Fish\UpdateUserFishService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

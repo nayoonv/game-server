@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Map;
+use JsonSerializable;
 
-class Map
+class Map implements JsonSerializable
 {
     private int $mapId;
 

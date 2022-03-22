@@ -33,7 +33,7 @@ class TideDBRepository extends BaseDBRepository
             if ($result)
                 $result = new Tide($result["tide_time"], $result["tide_type"], $result["tide_power"]);
         } catch (Exception $exception) {
-
+            throw new TideDBException();
         }
 
         return $result;

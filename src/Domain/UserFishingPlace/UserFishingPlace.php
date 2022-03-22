@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\UserFishingPlace;
+use JsonSerializable;
 
-class UserFishingPlace
+class UserFishingPlace implements JsonSerializable
 {
     private int $mapId;
 

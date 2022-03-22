@@ -19,7 +19,7 @@ class ReadWeatherAction
 
         $weatherInfo = $this->readWeatherService->getWeatherInfo($userId);
 
-        $response->getBody()->write(json_encode($weatherInfo->jsonSerialize()));
+        $response->getBody()->write(json_encode($weatherInfo));
 
         return $response;
     }

@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Domain\Boat;
+use JsonSerializable;
 
-class Boat
+class Boat implements JsonSerializable
 {
     private int $userBoatLevel;
 

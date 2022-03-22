@@ -15,6 +15,8 @@ class UpdateUserBookPrizeService
     public function __construct(GetBookPrizeService $getBookPrizeService
         , UserBookPrizeDBRepository                 $userBookPrizeDBRepository, UserGiftBoxService $updateUserGiftBoxService) {
         $this->getBookPrizeService = $getBookPrizeService;
+        $this->userBookPrizeDBRepository = $userBookPrizeDBRepository;
+        $this->updateUserGiftBoxService = $updateUserGiftBoxService;
     }
 
     public function getUserBookPrize($userId, $totalCount) {

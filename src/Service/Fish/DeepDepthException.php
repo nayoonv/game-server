@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Service\Fishing;
+namespace App\Service\Fish;
 
 use Exception;
 
-class NotFishingStatusException extends Exception
+class DeepDepthException extends Exception
 {
-    protected $message = "현재 출항하지 않았습니다.";
     protected $code = "5001";
+    protected $message = "너무 깊게 낚싯대를 내렸다";
 
     public function exceptionResult(): array {
         return [

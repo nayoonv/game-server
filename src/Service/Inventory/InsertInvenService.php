@@ -3,6 +3,7 @@
 namespace App\Service\Inventory;
 
 use App\Infrastructure\Persistence\Inventory\InvenDBRepository;
+use App\Infrastructure\Persistence\Inventory\InvenInsertFishException;
 
 class InsertInvenService
 {
@@ -13,6 +14,10 @@ class InsertInvenService
     }
 
     public function insertInvenFish($userFishId, $userId, $datetime) {
-        $this->invenDBRepository->insertUserFish($userFishId, $userId, $datetime);
+        try {
+            $this->invenDBRepository->insertUserFish($userFishId, $userId, $datetime);
+        } catch (InvenInsertFishException $e) {
+            throw $e;
+        }
     }
 }

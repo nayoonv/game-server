@@ -2,7 +2,9 @@
 
 namespace App\Domain\Departure;
 
-class DepartureInfo
+use JsonSerializable;
+
+class DepartureInfo implements JsonSerializable
 {
     private int $mapId;
 
