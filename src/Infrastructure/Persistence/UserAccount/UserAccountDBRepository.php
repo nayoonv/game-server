@@ -129,7 +129,6 @@ class UserAccountDBRepository extends BaseDBRepository
             }
         } catch (PDOException $exception) {
             $this->db->rollBack();
-            Logging::Log($exception);
         }
         return $result;
     }

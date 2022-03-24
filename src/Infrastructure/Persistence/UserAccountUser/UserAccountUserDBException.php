@@ -2,7 +2,17 @@
 
 namespace App\Infrastructure\Persistence\UserAccountUser;
 
-class UserAccountUserDBException
-{
+use Exception;
 
+class UserAccountUserDBException extends Exception
+{
+    protected $message = "user_account_user DB 오류";
+    protected $code = "5001";
+
+    public function response(): array {
+        return [
+            'code' => $this->code,
+            'message' => $this->message,
+        ];
+    }
 }

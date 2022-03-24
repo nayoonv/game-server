@@ -3,7 +3,8 @@
 namespace App\Infrastructure\Persistence\UserAccountUser;
 
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
-use App\Infrastructure\Persistence\UserAccount\UserAccountUserDBException;
+use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
+use PDOException;
 
 class UserAccountUserDBRepository extends BaseDBRepository
 {
@@ -20,8 +21,27 @@ class UserAccountUserDBRepository extends BaseDBRepository
             $userId = $sth->fetch();
             if (!$userId) $userId = 0;
             else $userId = (int)$userId["user_id"];
-        } catch (UserAccountUserDBException $exception) {
+        } catch (PDOException $exception) {
+            throw new UserAccountUserDBException();
+        }
+        return $userId;
+    }
 
+    public function findHiveIdByUserId($userId): int {
+        $query = "select hive_id from user_account_user where user_id = :user_id";
+
+        $hiveId = 0;
+        try {
+            $sth = $this->db->prepare($query);
+            $sth->bindParam(':user_id', $userId);
+
+            $sth->execute();
+
+            $hiveId = $sth->fetch();
+            if (!$hiveId) $hiveId = 0;
+            else $hiveId = (int)$hiveId["hive_id"];
+        } catch (PDOException $exception) {
+            throw new UserAccountUserDBException();
         }
         return $userId;
     }

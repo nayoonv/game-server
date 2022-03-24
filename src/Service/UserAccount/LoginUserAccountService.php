@@ -5,6 +5,7 @@ namespace App\Service\UserAccount;
 use App\Domain\User\User1;
 use App\Infrastructure\Persistence\UserAccount\UserAccountDBRepository;
 use App\Service\User\LoginUserService;
+use App\Util\Log;
 
 class LoginUserAccountService
 {
@@ -25,7 +26,7 @@ class LoginUserAccountService
             throw new InvalidPasswordException;
 
         $user = $this->loginUserService->findUser($hiveId);
-
+        Log::write('LOGIN', ['hive_id' => $hiveId, 'user_id' => $user->getUserId()]);
         return $user;
     }
 }

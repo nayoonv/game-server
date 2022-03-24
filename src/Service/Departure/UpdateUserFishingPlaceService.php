@@ -4,9 +4,13 @@ namespace App\Service\Departure;
 
 use App\Domain\Departure\DepartureInfo;
 use App\Infrastructure\Persistence\Map\UserMapDBRepository;
+use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
 use App\Service\Boat\GetUserBoatService;
 use App\Service\User\GetUserService;
 use App\Service\Map\GetMapService;
+use App\Service\UserAccountUser\GetUserAccountUserService;
+use App\Util\Log;
+use App\Util\SuccessResponseManager;
 
 class UpdateUserFishingPlaceService
 {
@@ -14,19 +18,22 @@ class UpdateUserFishingPlaceService
     private GetUserService $getUserService;
     private GetUserBoatService  $getUserBoatService;
     private GetMapService $getMapService;
+    private GetUserAccountUserService $getUserAccountUserService;
 
     public function __construct(UserMapDBRepository $userMapDBRepository, GetUserService $getUserService
-        ,GetUserBoatService  $getUserBoatService, GetMapService $getMapService) {
+        , GetUserBoatService  $getUserBoatService, GetMapService $getMapService
+        , GetUserAccountUserService $getUserAccountUserService) {
         $this->userMapDBRepository = $userMapDBRepository;
         $this->getUserService = $getUserService;
         $this->getUserBoatService = $getUserBoatService;
         $this->getMapService = $getMapService;
+        $this->getUserAccountUserService = $getUserAccountUserService;
     }
 
     /**
      * @throws UserLevelLimitException
      */
-    public function updateUserMap($userId, $mapId): DepartureInfo {
+    public function updateUserMap($userId, $mapId) {
         $userInfo = $this->getUserService->getUser($userId);
         $userBoatInfo = $this->getUserBoatService->getUserBoat($userId);
         $mapInfo = $this->getMapService->getMap($mapId);
@@ -45,19 +52,21 @@ class UpdateUserFishingPlaceService
                 $this->userMapDBRepository->updateUserMap($userId, $mapId);
 
                 $result = $this->readDepartureInfo($userId, $mapId);
-//                else
-//                    throw new Upd
+                $hiveId = $this->getUserAccountUserService->getHiveId($userId);
+                Log::write("DEPART"
+                    , ['hive_id' => $hiveId, 'user_id' => $userId, 'user_level' => $userInfo->getLevel(), 'map_id' => $mapId]);
+                $result = SuccessResponseManager::response($result);
             }
-
-//            $result = $this->readDepartureInfo($userId, $mapId);
         } catch(NeedBoatDurabilityException $e) {
             $result = $e->response();
         } catch (NeedUserFatigueException $needUserFatigueException) {
-            $result = $needUserFatigueException->exceptionResult();
+            $result = $needUserFatigueException->response();
         } catch (NeedBoatFuelException $needBoatFuelException) {
-            $result = $needBoatFuelException->exceptionResult();
+            $result = $needBoatFuelException->response();
         } catch (UserLevelLimitException $userLevelLimitException) {
-
+            $result = $userLevelLimitException->response();
+        } catch (UserAccountUserDBException $e) {
+            $result = $e->response();
         }
 
         return $result;

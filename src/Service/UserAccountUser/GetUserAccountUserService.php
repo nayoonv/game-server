@@ -4,9 +4,8 @@ namespace App\Service\UserAccountUser;
 
 use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
 use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBRepository;
-use App\Service\User\CreateUserService;
 
-class LoginUserAccountUserService
+class GetUserAccountUserService
 {
     private UserAccountUserDBRepository $userAccountUserDBRepository;
 
@@ -14,12 +13,12 @@ class LoginUserAccountUserService
         $this->userAccountUserDBRepository = $userAccountUserDBRepository;
     }
 
-    public function getUser($hiveId): int {
+    public function getHiveId($userId) {
         try {
-            $userId = $this->userAccountUserDBRepository->findUserIdByHiveId($hiveId);
+            $hiveId = $this->userAccountUserDBRepository->findHiveIdByUserId($userId);
         } catch (UserAccountUserDBException $e) {
             throw $e;
         }
-        return $userId;
+        return $hiveId;
     }
 }

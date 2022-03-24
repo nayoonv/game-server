@@ -5,6 +5,7 @@ namespace App\Service\Inventory;
 use App\Infrastructure\Persistence\Inventory\InvenDBException;
 use App\Infrastructure\Persistence\Inventory\InvenDBRepository;
 use App\Service\Equip\GetEquipService;
+use App\Util\Log;
 use App\Util\SuccessResponseManager;
 
 class ReadInvenService
@@ -22,6 +23,7 @@ class ReadInvenService
             $inventoryFishList = $this->invenDBRepository->findInventoryFishByUserId($userId);
             $inventoryEquipList = $this->getInvenEquipDetailInfo($this->invenDBRepository->findInventoryEquipByUserId($userId));
 
+            Log::create_scribe_client('READ-INVEN', $userId." 인벤토리 열어보기 성공");
             return SuccessResponseManager::response($this->getList($inventoryFishList, $inventoryEquipList));
         } catch (InvenDBException $e) {
             return $e->response();

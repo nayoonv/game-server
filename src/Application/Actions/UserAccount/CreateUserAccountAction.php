@@ -21,7 +21,7 @@ class CreateUserAccountAction
             $body['nation_id'], $body['language_id'], $body['name']
             , $body['email'], $body['password']));
 
-        $response->getBody()->write($result);
+        $response->getBody()->write(json_encode($result));
         return $response;
     }
 }

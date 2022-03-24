@@ -4,6 +4,7 @@ namespace App\Application\Actions\UserAccount;
 
 use App\Service\UserAccount\LoginUserAccountService;
 use App\Util\JWTManager;
+use App\Util\SuccessResponseManager;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -25,6 +26,7 @@ class LoginUserAccountAction
             "user"=>$userInfo,
             "token"=>$token
         ];
+        $result = SuccessResponseManager::response($result);
         $response->getBody()->write(json_encode($result));
 //        $response->getBody()->write
         return $response;

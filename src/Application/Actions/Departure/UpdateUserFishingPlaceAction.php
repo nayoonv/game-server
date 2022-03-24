@@ -21,11 +21,8 @@ class UpdateUserFishingPlaceAction
 
         $mapInfo = $this->updateUserCurrentPlaceService->updateUserMap($userId, $mapId);
 
-        if (!$mapInfo) {
-            $response->getBody()->write("Nothing to show");
-        } else{
-            $response->getBody()->write(json_encode($mapInfo));
-        }
+        $response->getBody()->write(json_encode($mapInfo));
+
         return $response;
     }
 

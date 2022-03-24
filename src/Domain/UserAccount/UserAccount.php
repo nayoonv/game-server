@@ -30,7 +30,7 @@ class UserAccount implements JsonSerializable
             'hive_id' => $this->hiveId,
             'nation_id' => $this->nationId,
             'language_id' => $this->languageId,
-            'user_id' => $this->userId
+            'email' => $this->email
         ];
     }
 }
