@@ -4,7 +4,6 @@ namespace App\Service\UserAccountUser;
 
 use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
 use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBRepository;
-use App\Service\User\CreateUserService;
 
 class LoginUserAccountUserService
 {

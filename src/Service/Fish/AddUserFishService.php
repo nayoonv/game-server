@@ -50,7 +50,7 @@ class AddUserFishService
         } catch (DeepDepthException $e) {
             return $e->exceptionResult();
         } catch(NotInsertUserFishException $e) {
-            return $e->exceptionResult();
+            return $e->response();
         } catch(FailToCatchFishException $e) {
             return $e->exceptionResult();
         } catch(NotAppearFishException $e) {

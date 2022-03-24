@@ -9,15 +9,15 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CreateUserAccountAction
 {
-    private SignUpUserAccountService $createUserAccountService;
+    private SignUpUserAccountService $signUpUserAccountService;
 
-    public function __construct(SignUpUserAccountService $createUserAccountService) {
-        $this->createUserAccountService = $createUserAccountService;
+    public function __construct(SignUpUserAccountService $signUpUserAccountService) {
+        $this->signUpUserAccountService = $signUpUserAccountService;
     }
 
     public function __invoke(Request $request, Response $response): Response {
         $body= $request->getParsedBody();
-        $result = $this->createUserAccountService->createUserAccount(new CreateUserAccount(
+        $result = $this->signUpUserAccountService->createUserAccount(new CreateUserAccount(
             $body['nation_id'], $body['language_id'], $body['name']
             , $body['email'], $body['password']));
 
