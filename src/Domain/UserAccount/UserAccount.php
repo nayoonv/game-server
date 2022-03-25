@@ -24,6 +24,9 @@ class UserAccount implements JsonSerializable
         $this->email = $email;
     }
 
+    public function getHiveId() {
+        return $this->hiveId;
+    }
     public function jsonSerialize(): array
     {
         return [

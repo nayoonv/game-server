@@ -14,7 +14,7 @@ class SignUpUserAccountService
         $this->userAccountDBRepository = $userAccountDBRepository;
     }
 
-    public function createUserAccount($createUserAccount): string {
+    public function createUserAccount($createUserAccount) {
         $userEmail = $createUserAccount->getEmail();
 
         $result = null;
@@ -24,10 +24,10 @@ class SignUpUserAccountService
 
             if ($hiveId == 0) {
                 // 메일이 없다는 것은 계정이 없다는 것을 의미한다.
-                $hiveId = $this->userAccountDBRepository->createUserAccount($createUserAccount);
+                $hiveId = $this->userAccountDBRepository->createUserAccount($createUserAccount)->getHiveId();
                 $result = SuccessResponseManager::response($userEmail."의 회원가입이 성공하였습니다.");
                 $account = $createUserAccount->jsonSerialize();
-                array_push($account, ['hive_id' => $hiveId]);
+                $account = array_merge($account, ['hive_id' => $hiveId]);
                 Log::write('SIGNUP', $account);
             } else {
                 // 중복 계정이 존재하기 때문에 해당 계정으로 login하라고 return

@@ -51,7 +51,6 @@ class CreateUserAccount implements JsonSerializable
             'language_id' => $this->languageId,
             'name' => $this->name,
             'email' => $this->email,
-            'password' => $this->password
         ];
     }
 }
