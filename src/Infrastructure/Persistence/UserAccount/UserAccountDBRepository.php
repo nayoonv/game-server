@@ -10,7 +10,6 @@ use PHPUnit\TextUI\XmlConfiguration\Logging\Logging;
 
 class UserAccountDBRepository extends BaseDBRepository
 {
-
     public function findUserAccountByHiveId($hiveId): UserAccount {
         $query = "select hive_id, nation_id, language_id, name, email from user_account where hive_id = :hive_id";
         $result = null;
@@ -25,7 +24,7 @@ class UserAccountDBRepository extends BaseDBRepository
             $result = new UserAccount($result["hive_id"], $result["nation_id"]
                 , $result["language_id"], $result["name"], $result["email"]);
         } catch (PDOException $exception) {
-            Logging::Log($exception);
+            throw new UserAccountDBException();
         }
         return $result;
     }
@@ -96,7 +95,7 @@ class UserAccountDBRepository extends BaseDBRepository
             if (!$hiveId) $hiveId = 0;
             else $hiveId = $hiveId["hive_id"];
         } catch(PDOException $exception) {
-            Logging::Log($exception);
+            throw new UserAccountDBException();
         }
 
         return $hiveId;
@@ -122,13 +121,13 @@ class UserAccountDBRepository extends BaseDBRepository
             $hiveId = $this->db->lastInsertId();
             $this->db->commit();
 
-            try {
-                $result = $this->findUserAccountByHiveId($hiveId);
-            } catch(UserAccountDBException $e) {
 
-            }
+            $result = $this->findUserAccountByHiveId($hiveId);
         } catch (PDOException $exception) {
             $this->db->rollBack();
+            throw new UserAccountDBException();
+        } catch(UserAccountDBException $e) {
+            throw $e;
         }
         return $result;
     }
