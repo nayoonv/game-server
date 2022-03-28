@@ -3,8 +3,6 @@
 namespace App\Application\Actions\UserAccount;
 
 use App\Service\UserAccount\LoginUserAccountService;
-use App\Util\JWTManager;
-use App\Util\SuccessResponseManager;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -20,15 +18,9 @@ class LoginUserAccountAction
         $body = $request->getParsedBody();
         $email = $body['email'];
         $password = $body['password'];
-        $userInfo = $this->loginUserAccountService->login($email, $password);
-        $token = JWTManager::getInstance()->getToken($userInfo->getUserId());
-        $result = [
-            "user"=>$userInfo,
-            "token"=>$token
-        ];
-        $result = SuccessResponseManager::response($result);
+        $result = $this->loginUserAccountService->login($email, $password);
+
         $response->getBody()->write(json_encode($result));
-//        $response->getBody()->write
         return $response;
     }
 }

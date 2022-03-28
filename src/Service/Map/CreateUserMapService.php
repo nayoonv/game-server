@@ -2,6 +2,7 @@
 
 namespace App\Service\Map;
 
+use App\Infrastructure\Persistence\Map\UserMapDBException;
 use App\Infrastructure\Persistence\Map\UserMapDBRepository;
 
 class CreateUserMapService
@@ -15,8 +16,8 @@ class CreateUserMapService
     public function createUserMap($userId) {
         try {
             $this->userMapDBRepository->createUserMap($userId);
-        } catch (NotCreateUserMapException $exception) {
-
+        } catch (UserMapDBException $exception) {
+            throw $exception;
         }
     }
 }

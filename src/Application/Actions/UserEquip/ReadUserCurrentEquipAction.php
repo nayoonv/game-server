@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Actions\Fishing;
+namespace App\Application\Actions\UserEquip;
 
 use App\Service\UserCurrentEquip\GetUserCurrentEquipService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,9 +18,9 @@ class ReadUserCurrentEquipAction
         $body = $request->getParsedBody();
         $userId = $body['user_id'];
 
-        $fishInfo = $this->getUserCurrentEquipService->getUserCurrentEquipInfo($userId);
+        $equipInfo = $this->getUserCurrentEquipService->getUserCurrentEquip($userId);
 
-        $response->getBody()->write(json_encode($fishInfo));
+        $response->getBody()->write(json_encode($equipInfo));
 
         return $response;
     }

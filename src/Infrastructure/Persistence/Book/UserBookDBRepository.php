@@ -23,8 +23,8 @@ class UserBookDBRepository extends BaseDBRepository
                     array_push($result, new UserBook($book['user_id'], $book['fish_id'], $book['catch_date']));
                 }
             }
-        } catch(UserBookDBException $exception) {
-
+        } catch(Exception $exception) {
+            throw new UserBookDBException();
         }
         return $result;
     }
@@ -37,8 +37,8 @@ class UserBookDBRepository extends BaseDBRepository
             $sth = $this->db->prepare($query);
             $sth->execute($data);
             $this->db->commit();
-        } catch(UserBookDBException $exception) {
-
+        } catch(Exception $exception) {
+            throw new UserBookDBException();
         }
     }
 
@@ -57,8 +57,8 @@ class UserBookDBRepository extends BaseDBRepository
                     array_push($result, new UserBook($book['user_id'], $book['fish_id'], $book['catch_date']));
                 }
             }
-        } catch(UserBookDBException $exception) {
-
+        } catch(Exception $exception) {
+            throw new UserBookDBException();
         }
         return $result;
     }
@@ -83,8 +83,8 @@ class UserBookDBRepository extends BaseDBRepository
                         , $book['map_id'], $book['map_name'], $book['max_length'], $book['max_weight']));
                 }
             }
-        } catch(UserBookDBException $exception) {
-
+        } catch(Exception $exception) {
+            throw new UserBookDBException();
         }
         return $result;
     }

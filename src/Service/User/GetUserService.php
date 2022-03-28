@@ -2,6 +2,7 @@
 
 namespace App\Service\User;
 
+use App\Infrastructure\Persistence\User\UserDBException;
 use App\Infrastructure\Persistence\User\UserDBRepository;
 
 class GetUserService
@@ -13,7 +14,11 @@ class GetUserService
     }
 
     public function getUser($userId) {
-        // 해당 유저가 없을 수도 있음
-        return $this->userDBRepository->findByUserId($userId);
+        try {
+            // 해당 유저가 없을 수도 있음
+            return $this->userDBRepository->findByUserId($userId);
+        } catch(UserDBException $e) {
+            throw $e;
+        }
     }
 }

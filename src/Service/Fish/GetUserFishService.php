@@ -12,11 +12,18 @@ class GetUserFishService
         $this->userFishDBRepository = $userFishDBRepository;
     }
     public function getUserFishWhileFishing($userId){
-        $userFishList = $this->userFishDBRepository->findBeforeCalUnchecked($userId);
-        return $userFishList;
+        try {
+            return $this->userFishDBRepository->findBeforeCalUnchecked($userId);
+        } catch (UserFishDBException $e) {
+            throw $e;
+        }
     }
     public function getUserFishNotInUserBook($userId) {
-        return $this->userFishDBRepository->findNotInUserBookByUserId($userId);
+        try {
+            return $this->userFishDBRepository->findNotInUserBookByUserId($userId);
+        } catch (UserFishDBException $e) {
+            throw $e;
+        }
     }
     public function getUserFish($userFishId) {
         try {

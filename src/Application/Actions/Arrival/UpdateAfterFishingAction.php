@@ -20,7 +20,7 @@ class UpdateAfterFishingAction
 
         $result = $this->updateAfterFishingService->getResultAfterFishing($userId);
 
-        $response->getBody()->write(json_encode($result, JSON_UNESCAPED_UNICODE));
+        $response->getBody()->write(json_encode($result));
 
         return $response;
     }

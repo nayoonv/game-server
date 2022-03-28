@@ -2,17 +2,10 @@
 
 namespace App\Service\Fish;
 
-use Exception;
+use App\Util\UrukException;
 
-class NotUserFishWhileFishingException extends Exception
+class NotUserFishWhileFishingException extends UrukException
 {
-    protected $code = "4041";
-    protected $message = "물고기를 한마리도 잡아오지 못했다.";
-
-    public function response() {
-        return [
-            'code' => $this->code,
-            'message' => $this->message
-        ];
-    }
+    protected $code = "10001";
+    protected $message = "정산할 물고기가 없음";
 }

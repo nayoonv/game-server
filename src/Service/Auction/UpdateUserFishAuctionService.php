@@ -2,6 +2,7 @@
 
 namespace App\Service\Auction;
 
+use App\Infrastructure\Persistence\Auction\UserFishAuctionDBException;
 use App\Infrastructure\Persistence\Auction\UserFishAuctionDBRepository;
 
 class UpdateUserFishAuctionService
@@ -29,6 +30,10 @@ class UpdateUserFishAuctionService
         }
     }
     public function getUserFishAuction($userId) {
-        return $this->userFishAuctionDBRepository->findByUserId($userId);
+        try {
+            return $this->userFishAuctionDBRepository->findByUserId($userId);
+        } catch(UserFishAuctionDBException $e) {
+            throw $e;
+        }
     }
 }

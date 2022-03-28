@@ -2,6 +2,11 @@
 
 namespace App\Service\Arrival;
 
+use App\Infrastructure\Persistence\Book\BookPrizeDBException;
+use App\Infrastructure\Persistence\Book\BookPrizeNotExistsException;
+use App\Infrastructure\Persistence\Book\UserBookDBException;
+use App\Infrastructure\Persistence\Fish\UserFishDBException;
+use App\Infrastructure\Persistence\Map\UserMapDBException;
 use App\Service\Book\GetUserBookService;
 use App\Service\Book\UpdateUserBookPrizeService;
 use App\Service\Departure\UpdateUserFishingPlaceService;
@@ -20,8 +25,9 @@ class UpdateAfterFishingService
     private UpdateUserBookPrizeService $updateUserBookPrizeService;
 
     public function __construct(UpdateUserFishService $updateUserFishService
-        , UpdateUserFishingPlaceService $updateUserFishingPlaceService, GetUserFishService $getUserFishService
-        , GetUserBookService $getUserBookService, UpdateUserBookPrizeService $updateUserBookPrizeService) {
+        , UpdateUserFishingPlaceService               $updateUserFishingPlaceService, GetUserFishService $getUserFishService
+        , GetUserBookService                          $getUserBookService, UpdateUserBookPrizeService $updateUserBookPrizeService)
+    {
         $this->updateUserFishService = $updateUserFishService;
         $this->updateUserFishingPlaceService = $updateUserFishingPlaceService;
         $this->getUserFishService = $getUserFishService;
@@ -29,7 +35,8 @@ class UpdateAfterFishingService
         $this->updateUserBookPrizeService = $updateUserBookPrizeService;
     }
 
-    public function getResultAfterFishing($userId) {
+    public function getResultAfterFishing($userId)
+    {
         $result = array();
         // 입항하기
         try {
@@ -55,17 +62,23 @@ class UpdateAfterFishingService
                 throw new NotUserFishWhileFishingException();
             }
 
-        } catch (NotFishingStatusException $e) {
-            return $e->response();
-        } catch(NotUserFishWhileFishingException $e) {
+            return SuccessResponseManager::response($result);
+
+        } catch (NotFishingStatusException|NotUserFishWhileFishingException|BookPrizeDBException
+            |BookPrizeNotExistsException|UserMapDBException|UserFishDBException|UserBookDBException $e) {
             return $e->response();
         }
-        return SuccessResponseManager::response($result);
     }
 
-    public function prizeFromUserBook($userId) {
-        $totalCount = count($this->getUserBookService->getUserBook($userId));
-        $addedBookPrize = $this->updateUserBookPrizeService->getUserBookPrize($userId, $totalCount);
-        return $addedBookPrize;
+    public function prizeFromUserBook($userId)
+    {
+        try {
+            $totalCount = count($this->getUserBookService->getUserBook($userId));
+
+            return $this->updateUserBookPrizeService->getUserBookPrize($userId, $totalCount);
+
+        } catch (BookPrizeDBException|BookPrizeNotExistsException|UserBookDBException $e) {
+            throw $e;
+        }
     }
 }

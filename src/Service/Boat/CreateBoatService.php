@@ -15,8 +15,8 @@ class CreateBoatService
     public function createUserBoat($userId) {
         try {
             $this->userBoatDBRepository->createUserBoat($userId);
-        } catch (NotCreateUserBoatException $exceptioin) {
-
+        } catch (NotCreateUserBoatException $exception) {
+            throw $exception;
         }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Infrastructure\Persistence\Boat;
 
 use App\Domain\Boat\UserBoat;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
+use App\Service\Boat\NotCreateUserBoatException;
 
 class UserBoatDBRepository extends BaseDBRepository
 {
@@ -21,7 +22,7 @@ class UserBoatDBRepository extends BaseDBRepository
             $this->db->commit();
 
         } catch(Exception $e) {
-
+            throw new UserBoatDBException();
         }
     }
     public function findByUserId($userId) {
@@ -38,8 +39,8 @@ class UserBoatDBRepository extends BaseDBRepository
             if ($result) {
                 $result = new UserBoat($result['user_boat_level'], $result['user_boat_durability'], $result['user_boat_fuel']);
             }
-        } catch (UserBoatNotExistsException $exception) {
-
+        } catch (Exception $exception) {
+            throw new UserBoatDBException();
         }
         return $result;
     }
@@ -58,7 +59,7 @@ class UserBoatDBRepository extends BaseDBRepository
             $this->db->commit();
 
         } catch(Exception $e) {
-
+            throw new UserBoatDBException();
         }
     }
 }

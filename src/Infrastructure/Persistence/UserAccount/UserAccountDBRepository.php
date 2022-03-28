@@ -50,7 +50,7 @@ class UserAccountDBRepository extends BaseDBRepository
                 , $result["language_id"], $result["level"], $result["experience"]
                 , $result["gold"], $result["pearl"], $result["fatigue"]);
         } catch(PDOException $exception) {
-            Logging::Log($exception);
+            throw new UserAccountDBException();
         }
         return $user;
     }
@@ -71,12 +71,15 @@ class UserAccountDBRepository extends BaseDBRepository
             if (password_verify($password, $encryptedPassword)) {
                 $result = true;
             }
-        } catch(UserAccountDBException $e) {
-
+        } catch(PDOException $e) {
+            throw new UserAccountDBException();
         }
         return $result;
     }
 
+    /**
+     * @throws UserAccountDBException
+     */
     public function isEmailExist($userEmail): int {
 
         $query = "select hive_id 
@@ -97,7 +100,6 @@ class UserAccountDBRepository extends BaseDBRepository
         } catch(PDOException $exception) {
             throw new UserAccountDBException();
         }
-
         return $hiveId;
     }
 
@@ -121,13 +123,10 @@ class UserAccountDBRepository extends BaseDBRepository
             $hiveId = $this->db->lastInsertId();
             $this->db->commit();
 
-
             $result = $this->findUserAccountByHiveId($hiveId);
         } catch (PDOException $exception) {
             $this->db->rollBack();
             throw new UserAccountDBException();
-        } catch(UserAccountDBException $e) {
-            throw $e;
         }
         return $result;
     }

@@ -4,7 +4,6 @@ namespace App\Infrastructure\Persistence\Auction;
 
 use App\Domain\Auction\UserFishAuction;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
-use App\Service\Auction\UserFishAuctionDBException;
 use PDOException;
 
 class UserFishAuctionDBRepository extends BaseDBRepository

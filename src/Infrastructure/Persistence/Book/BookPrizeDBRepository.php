@@ -4,6 +4,7 @@ namespace App\Infrastructure\Persistence\Book;
 
 use App\Domain\Book\BookPrize;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
+use PDOException;
 
 class BookPrizeDBRepository extends BaseDBRepository
 {
@@ -20,9 +21,13 @@ class BookPrizeDBRepository extends BaseDBRepository
 
             if($result) {
                 $result = new BookPrize($result['book_prize_id'], $result['fish_count'], $result['asset_id'], $result['cost']);
+            } else {
+                throw new BookPrizeNotExistsException();
             }
-        } catch(UserFishDBException $exception) {
-
+        } catch(PDOException $exception) {
+            throw new BookPrizeDBException();
+        } catch(BookPrizeNotExistsException $e) {
+            throw $e;
         }
         return $result;
     }
@@ -43,9 +48,13 @@ class BookPrizeDBRepository extends BaseDBRepository
                 foreach($bookPrizes as &$bookPrize) {
                     $result = new BookPrize($bookPrize['book_prize_id'], $bookPrize['fish_count'], $bookPrize['asset_id'], $bookPrize['cost']);
                 }
+            } else {
+                throw new BookPrizeNotExistsBetweenCountException();
             }
-        } catch(UserFishDBException $exception) {
-
+        } catch(PDOException $exception) {
+            throw new BookPrizeDBException();
+        } catch(BookPrizeNotExistsBetweenCountException $e) {
+            throw $e;
         }
         return $result;
     }

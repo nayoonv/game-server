@@ -2,17 +2,11 @@
 
 namespace App\Service\Fish;
 
-use Exception;
+use App\Util\UrukException;
 
-class NotFishingStatusException extends Exception
+class NotFishingStatusException extends UrukException
 {
-    protected $message = "현재 출항하지 않았습니다.";
-    protected $code = "5001";
+    protected $message = "출항하지 않은 상태";
+    protected $code = "8006";
 
-    public function response(): array {
-        return [
-            'code' => $this->code,
-            'message' => $this->message,
-        ];
-    }
 }

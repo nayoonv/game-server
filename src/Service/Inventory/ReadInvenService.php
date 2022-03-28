@@ -4,6 +4,7 @@ namespace App\Service\Inventory;
 
 use App\Infrastructure\Persistence\Inventory\InvenDBException;
 use App\Infrastructure\Persistence\Inventory\InvenDBRepository;
+use App\Infrastructure\Persistence\Inventory\ItemNotExistsException;
 use App\Service\Equip\GetEquipService;
 use App\Util\Log;
 use App\Util\SuccessResponseManager;
@@ -70,5 +71,12 @@ class ReadInvenService
             }
         }
         return $inventoryEquipList;
+    }
+    public function getInventoryItem($inventoryId)  {
+        try {
+            return $this->invenDBRepository->findUserEquipByInventoryId($inventoryId);
+        } catch (ItemNotExistsException|InvenDBException $e) {
+            throw $e;
+        }
     }
 }

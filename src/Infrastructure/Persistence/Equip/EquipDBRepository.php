@@ -10,6 +10,7 @@ use App\Domain\Equip\CurrentRod;
 use App\Domain\Equip\CurrentSinker;
 use App\Domain\Equip\Equip;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
+use Exception;
 
 class EquipDBRepository extends BaseDBRepository
 {
@@ -25,9 +26,12 @@ class EquipDBRepository extends BaseDBRepository
 
             if($result) {
                 $result = new Equip($equipId, $result['preparation_id'], $result['preparation_type_id']);
-            }
-        } catch (EquipNoExistsException $exception) {
-
+            } else
+                throw new EquipNotExistsException("none");
+        } catch (EquipNotExistsException $e) {
+            throw $e;
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -58,9 +62,12 @@ class EquipDBRepository extends BaseDBRepository
                 $result = new CurrentRod($rodInfo->getEquipId(), $result['rod_name'], $result['rod_grade_id']
                     , $result['rod_grade_name'], $result['rod_type_id'], $result['rod_type_name'], $result['hardness']
                     , $result['hooking_probability'], $result['success_probability'], $rodInfo->getLevel(), $rodInfo->getDurability());
-            }
-        } catch(EquipNoExistsException $exception) {
-
+            } else
+                throw new EquipNotExistsException("rod");
+        } catch (EquipNotExistsException $e) {
+            throw $e;
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -87,9 +94,12 @@ class EquipDBRepository extends BaseDBRepository
             if ($result) {
                 $result = new CurrentLine($lineInfo->getEquipId(), $result['line_name'], $result['strength']
                     , $result['hooking_probability'], $result['success_probability'], $lineInfo->getLevel());
-            }
-        } catch(EquipNoExistsException $exception) {
-
+            }else
+                throw new EquipNotExistsException("line");
+        } catch (EquipNotExistsException $e) {
+            throw $e;
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -117,9 +127,12 @@ class EquipDBRepository extends BaseDBRepository
             if ($result) {
                 $result = new CurrentReel($reelInfo->getEquipId(), $result['reel_name'], $result['reel_grade_id']
                     , $result['reel_grade_name'], $result['reel_winding_amount'], $reelInfo->getLevel(), $reelInfo->getDurability());
-            }
-        } catch(EquipNoExistsException $exception) {
-
+            }else
+                throw new EquipNotExistsException("reel");
+        } catch (EquipNotExistsException $e) {
+            throw $e;
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -143,9 +156,12 @@ class EquipDBRepository extends BaseDBRepository
             if ($result) {
                 $result = new CurrentHook($hookInfo->getEquipId(), $result['hook_name']
                     , $result['appearance_probability'], $result['success_probability']);
-            }
-        } catch(EquipNoExistsException $exception) {
-
+            } else
+                throw new EquipNotExistsException("hook");
+        } catch (EquipNotExistsException $e) {
+            throw $e;
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -171,9 +187,12 @@ class EquipDBRepository extends BaseDBRepository
             if ($result) {
                 $result = new CurrentBait($baitInfo->getEquipId(), $result['bait_name'], $result['bait_grade_id']
                     , $result['bait_grade_name'], $result['advanced_appearance_probability']);
-            }
-        } catch(EquipNoExistsException $exception) {
-
+            } else
+                throw new EquipNotExistsException("bait");
+        } catch (EquipNotExistsException $e) {
+            throw $e;
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -197,9 +216,12 @@ class EquipDBRepository extends BaseDBRepository
 
             if ($result) {
                 $result = new CurrentSinker($sinkerInfo->getEquipId(), $result['sinker_name'], $result['sinker_weight']);
-            }
-        } catch(EquipNoExistsException $exception) {
-
+            } else
+                throw new EquipNotExistsException("sinker");
+        } catch (EquipNotExistsException $e) {
+            throw $e;
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -221,8 +243,8 @@ class EquipDBRepository extends BaseDBRepository
 
             $result = $sth->fetch()['rod_name'];
 
-        } catch(EquipNoExistsException $exception) {
-
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -244,8 +266,8 @@ class EquipDBRepository extends BaseDBRepository
 
             $result = $sth->fetch()['line_name'];
 
-        } catch(EquipNoExistsException $exception) {
-
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -267,8 +289,8 @@ class EquipDBRepository extends BaseDBRepository
 
             $result = $sth->fetch()['reel_name'];
 
-        } catch(EquipNoExistsException $exception) {
-
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -290,8 +312,8 @@ class EquipDBRepository extends BaseDBRepository
 
             $result = $sth->fetch()['hook_name'];
 
-        } catch(EquipNoExistsException $exception) {
-
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -313,8 +335,8 @@ class EquipDBRepository extends BaseDBRepository
 
             $result = $sth->fetch()['bait_name'];
 
-        } catch(EquipNoExistsException $exception) {
-
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }
@@ -335,8 +357,8 @@ class EquipDBRepository extends BaseDBRepository
 
             $result = $sth->fetch()['sinker_name'];
 
-        } catch(EquipNoExistsException $exception) {
-
+        } catch (Exception $exception) {
+            throw new EquipDBException();
         }
         return $result;
     }

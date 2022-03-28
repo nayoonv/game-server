@@ -4,6 +4,7 @@ namespace App\Infrastructure\Persistence\Inventory;
 
 use App\Domain\Inventory\InvenEquip;
 use App\Domain\Inventory\InvenFish;
+use App\Domain\Inventory\InvenItem;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use PDOException;
 
@@ -88,6 +89,56 @@ class InvenDBRepository extends BaseDBRepository
 
         } catch (PDOException $exception) {
             throw new InvenInsertFishException();
+        }
+    }
+
+    public function findUserEquipByInventoryId($inventoryId) {
+        $query = "select * from inventory where inventory_id = :inventory_id";
+
+        $result = false;
+        try {
+            $sth = $this->db->prepare($query);
+            $sth->bindParam(':inventory_id', $inventoryId);
+
+            $sth->execute();
+
+            $result = $sth->fetch();
+
+            if($result) {
+                $result = new InvenItem($result['inventory_id'], $result['user_id'], $result['item_id']
+                    , $result['get_date'], $result['inventory_type_id']);
+            } else  {
+                throw new ItemNotExistsException();
+            }
+        } catch (ItemNotExistsException $e) {
+            throw $e;
+        } catch(PDOException $exception) {
+            throw new InvenDBException();
+        }
+
+        return $result;
+    }
+
+    public function insertUserEquip($userEquipId, $userId) {
+        $query = "insert into inventory(user_id, inventory_type_id, item_id) 
+                values (:user_id, 1, :user_equip_id)";
+
+        try {
+            $this->db->beginTransaction();
+            $sth = $this->db->prepare($query);
+
+            $sth->bindParam(':user_id', $userId);
+            $sth->bindParam(':user_equip_id', $userEquipId);
+
+            $sth->execute();
+
+            $inventoryId = $this->db->lastInsertId();
+
+            $this->db->commit();
+
+            return $inventoryId;
+        } catch (PDOException $exception) {
+            throw new InvenInsertEquipException();
         }
     }
 }

@@ -19,7 +19,7 @@ class ReadInvenAction
 
         $inventoryInfo = $this->readInvenService->getInvenInfo($userId);
 
-        $response->getBody()->write(json_encode($inventoryInfo, JSON_UNESCAPED_UNICODE));
+        $response->getBody()->write(json_encode($inventoryInfo));
 
         return $response;
     }

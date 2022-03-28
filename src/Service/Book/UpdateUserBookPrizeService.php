@@ -3,6 +3,8 @@
 namespace App\Service\Book;
 
 use App\Domain\UserGiftBox\RequestUserGiftBox;
+use App\Infrastructure\Persistence\Book\BookPrizeDBException;
+use App\Infrastructure\Persistence\Book\BookPrizeNotExistsException;
 use App\Infrastructure\Persistence\Book\UserBookPrizeDBRepository;
 use App\Service\UserGiftBox\UserGiftBoxService;
 
@@ -13,36 +15,44 @@ class UpdateUserBookPrizeService
     private UserGiftBoxService $updateUserGiftBoxService;
 
     public function __construct(GetBookPrizeService $getBookPrizeService
-        , UserBookPrizeDBRepository                 $userBookPrizeDBRepository, UserGiftBoxService $updateUserGiftBoxService) {
+        , UserBookPrizeDBRepository                 $userBookPrizeDBRepository, UserGiftBoxService $updateUserGiftBoxService)
+    {
         $this->getBookPrizeService = $getBookPrizeService;
         $this->userBookPrizeDBRepository = $userBookPrizeDBRepository;
         $this->updateUserGiftBoxService = $updateUserGiftBoxService;
     }
 
-    public function getUserBookPrize($userId, $totalCount) {
-        $userBookPrize = $this->userBookPrizeDBRepository->findByUserId($userId);
-        $previousFishCount = 0;
-        if ($userBookPrize) {
-            $previousPrize = $this->getBookPrizeService->getBookPrize($userBookPrize->getBookPrizeId());
-            $previousFishCount = $previousPrize->getFishCount();
-        }
+    public function getUserBookPrize($userId, $totalCount)
+    {
+        try {
+            $userBookPrize = $this->userBookPrizeDBRepository->findByUserId($userId);
+            $previousFishCount = 0;
+            if ($userBookPrize) {
 
-        if ($totalCount != $previousFishCount) {
-            $availablePrize = $this->getBookPrizeService->getBookPrizeBetweenCount($previousFishCount, $totalCount);
-            if ($availablePrize) {
-                // 선물함에 선물 증정하기
-                foreach($availablePrize as &$prize) {
-                    $requestUserGiftBox = new RequestUserGiftBox($userId, 1, $prize->getAssetId()
-                        , $prize->getCost());
+                $previousPrize = $this->getBookPrizeService->getBookPrize($userBookPrize->getBookPrizeId());
 
-                    $this->updateUserGiftBoxService->insertUserGiftBox($requestUserGiftBox);
-                }
-
-                $bookPrizeId = $availablePrize[count($availablePrize) - 1]->getBookPrizeId();
-                $this->userBookPrizeDBRepository->updateBookPrizeId($userId, $bookPrizeId);
-                return $availablePrize;
+                $previousFishCount = $previousPrize->getFishCount();
             }
+
+            if ($totalCount != $previousFishCount) {
+                $availablePrize = $this->getBookPrizeService->getBookPrizeBetweenCount($previousFishCount, $totalCount);
+                if ($availablePrize) {
+                    // 선물함에 선물 증정하기
+                    foreach ($availablePrize as &$prize) {
+                        $requestUserGiftBox = new RequestUserGiftBox($userId, 1, $prize->getAssetId()
+                            , $prize->getCost());
+
+                        $this->updateUserGiftBoxService->insertUserGiftBox($requestUserGiftBox);
+                    }
+
+                    $bookPrizeId = $availablePrize[count($availablePrize) - 1]->getBookPrizeId();
+                    $this->userBookPrizeDBRepository->updateBookPrizeId($userId, $bookPrizeId);
+                    return $availablePrize;
+                }
+            }
+            return false;
+        } catch (BookPrizeDBException|BookPrizeNotExistsException $e) {
+            throw $e;
         }
-        return false;
     }
 }

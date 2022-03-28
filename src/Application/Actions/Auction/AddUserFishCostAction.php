@@ -22,7 +22,7 @@ class AddUserFishCostAction
 
         $result = $this->addUserFishCostService->sellFish($userId, $userFishId);
 
-        $response->getBody()->write(json_encode($result, JSON_UNESCAPED_UNICODE));
+        $response->getBody()->write(json_encode($result));
 
         return $response;
     }

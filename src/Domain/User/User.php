@@ -1,57 +1,57 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Domain\User;
 
 use JsonSerializable;
 
 class User implements JsonSerializable
 {
-    private ?int $id;
+    private int $userId;
 
-    private string $username;
+    private int $level;
 
-    private string $firstName;
+    private int $experience;
 
-    private string $lastName;
+    private int $gold;
 
-    public function __construct(?int $id, string $username, string $firstName, string $lastName)
-    {
-        $this->id = $id;
-        $this->username = strtolower($username);
-        $this->firstName = ucfirst($firstName);
-        $this->lastName = ucfirst($lastName);
+    private int $pearl;
+
+    private int $fatigue;
+
+    public function getUserId() {
+        return $this->userId;
+    }
+    public function getLevel() {
+        return $this->level;
+    }
+    public function getFatigue() {
+        return $this->fatigue;
+    }
+    public function getGold() {
+        return $this->gold;
+    }
+    public function getPearl() {
+        return $this->pearl;
+    }
+    public function __construct($userId, $level, $experience, $gold, $pearl, $fatigue) {
+        $this->userId = $userId;
+        $this->level = $level;
+        $this->experience = $experience;
+        $this->gold = $gold;
+        $this->pearl = $pearl;
+        $this->fatigue = $fatigue;
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    public function getFirstName(): string
-    {
-        return $this->firstName;
-    }
-
-    public function getLastName(): string
-    {
-        return $this->lastName;
-    }
-
-    #[\ReturnTypeWillChange]
     public function jsonSerialize(): array
     {
+        // TODO: Implement jsonSerialize() method.
         return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'firstName' => $this->firstName,
-            'lastName' => $this->lastName,
+            'user_id' => $this->userId,
+            'level' => $this->level,
+            'experience' => $this->experience,
+            'gold' => $this->gold,
+            'pearl' => $this->pearl,
+            'fatigue' => $this->fatigue
         ];
     }
 }

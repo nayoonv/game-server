@@ -2,6 +2,7 @@
 
 namespace App\Service\Book;
 
+use App\Infrastructure\Persistence\Book\UserBookDBException;
 use App\Infrastructure\Persistence\Book\UserBookDBRepository;
 
 class GetUserBookService
@@ -13,17 +14,25 @@ class GetUserBookService
     }
 
     public function getUserBookFishList($userId) {
-        $userBookFishList = $this->userBookDBRepository->findFishMapByUserId($userId);
+        try {
+            $userBookFishList = $this->userBookDBRepository->findFishMapByUserId($userId);
 
-        if (!$userBookFishList)
-            $userBookFishList = [];
+            if (!$userBookFishList)
+                $userBookFishList = [];
 
-        $result = ['user_book_fish_list' => $userBookFishList];
+            $result = ['user_book_fish_list' => $userBookFishList];
 
-        return $result;
+            return $result;
+        } catch (UserBookDBException $e) {
+            throw $e;
+        }
     }
 
     public function getUserBook($userId) {
-        return $this->userBookDBRepository->findByUserId($userId);
+        try {
+            return $this->userBookDBRepository->findByUserId($userId);
+        } catch (UserBookDBException $e) {
+            throw $e;
+        }
     }
 }

@@ -1,17 +1,11 @@
 <?php
 
 namespace App\Service\Cost;
-use Exception;
+use App\Util\UrukException;
 
-class UserFishCostDBException extends Exception
+class UserFishCostDBException extends UrukException
 {
-    protected $code = "5003";
+    protected $code = "15002";
     protected $message = "user fish cost db 오류";
 
-    public function response(): array {
-        return [
-            'code' => $this->code,
-            'message' => $this->message,
-        ];
-    }
 }

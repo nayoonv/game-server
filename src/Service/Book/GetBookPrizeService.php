@@ -2,7 +2,9 @@
 
 namespace App\Service\Book;
 
+use App\Infrastructure\Persistence\Book\BookPrizeDBException;
 use App\Infrastructure\Persistence\Book\BookPrizeDBRepository;
+use App\Infrastructure\Persistence\Book\BookPrizeNotExistsException;
 
 class GetBookPrizeService
 {
@@ -13,7 +15,11 @@ class GetBookPrizeService
     }
 
     public function getBookPrize($bookPrizeId) {
-        return $this->bookPrizeDBRepository->findByBookPrizeId($bookPrizeId);
+        try {
+            return $this->bookPrizeDBRepository->findByBookPrizeId($bookPrizeId);
+        } catch (BookPrizeDBException|BookPrizeNotExistsException $e) {
+            throw $e;
+        }
     }
 
     public function getBookPrizeBetweenCount($previousCount, $currentCount) {

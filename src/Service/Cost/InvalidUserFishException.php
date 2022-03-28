@@ -2,17 +2,10 @@
 
 namespace App\Service\Cost;
 
-use Exception;
+use App\Util\UrukException;
 
-class InvalidUserFishException extends Exception
+class InvalidUserFishException extends UrukException
 {
-    protected $code = "11111";
-    protected $message = "user_fish_id에 해당하는 물고기가 존재하지 않습니다.";
-
-    public function response() {
-        return [
-            'code' => $this->code,
-            'message' => $this->message
-        ];
-    }
+    protected $code = "15001";
+    protected $message = "존재하지 않는 User Fish Id";
 }

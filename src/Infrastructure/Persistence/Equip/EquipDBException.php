@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Service\Auction;
+namespace App\Infrastructure\Persistence\Equip;
 
 use Exception;
 
-class UserFishAuctionDBException extends Exception
+class EquipDBException extends Exception
 {
-    protected $code = "2222";
-    protected $message = "user_fish_auction DB 오류";
+    protected $code = "5000";
+    protected $message = "EQUIP DB 오류";
 
     public function response() {
         return [

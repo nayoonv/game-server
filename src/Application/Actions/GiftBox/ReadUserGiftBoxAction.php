@@ -20,7 +20,7 @@ class ReadUserGiftBoxAction
 
         $userGiftBoxList = $this->userGiftBoxService->readUserGiftBox($userId);
 
-        $response->getBody()->write(json_encode($userGiftBoxList, JSON_UNESCAPED_UNICODE));
+        $response->getBody()->write(json_encode($userGiftBoxList));
 
         return $response;
     }

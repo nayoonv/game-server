@@ -2,10 +2,10 @@
 
 namespace App\Service\Cost;
 
+use App\Infrastructure\Persistence\Auction\UserFishAuctionDBException;
 use App\Infrastructure\Persistence\Cost\UserFishCostDBRepository;
 use App\Infrastructure\Persistence\Fish\UserFishDBException;
 use App\Service\Auction\UpdateUserFishAuctionService;
-use App\Service\Auction\UserFishAuctionDBException;
 use App\Service\Fish\GetUserFishService;
 use App\Service\Fish\UpdateUserFishService;
 use App\Util\SuccessResponseManager;
@@ -54,14 +54,9 @@ class AddUserFishCostService
 
             // 물고기 삭제
             $this->updateUserFishService->deleteUserFish($userFishId);
+
             return SuccessResponseManager::response($userFishInfo);
-        } catch (UserFishDBException $e) {
-            return $e->response();
-        } catch (InvalidUserFishException $e) {
-            return $e->response();
-        } catch(UserFishAuctionDBException $e) {
-            return $e->response();
-        } catch(UserFishCostDBException $e) {
+        } catch (InvalidUserFishException|UserFishCostDBException|UserFishDBException|UserFishAuctionDBException $e) {
             return $e->response();
         }
     }

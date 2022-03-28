@@ -6,6 +6,13 @@ use Exception;
 
 class MapDBException extends Exception
 {
-    public $code = "2000";
-    public $message = "지도 DB 문제";
+    protected $code = "12000";
+    protected $message = "Map DB 문제";
+
+    public function response() {
+        return [
+            'code' => $this->code,
+            'message' => $this->message
+        ];
+    }
 }

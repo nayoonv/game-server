@@ -6,7 +6,7 @@ use Exception;
 
 class InvenDBException extends Exception
 {
-    protected $code = "60006";
+    protected $code = "6000";
     protected $message = "인벤토리 DB 오류";
 
     public function response() {

@@ -2,7 +2,9 @@
 
 namespace App\Service\Equip;
 
+use App\Infrastructure\Persistence\Equip\EquipDBException;
 use App\Infrastructure\Persistence\Equip\EquipDBRepository;
+use App\Infrastructure\Persistence\Equip\EquipNotExistsException;
 
 class GetEquipService
 {
@@ -13,54 +15,106 @@ class GetEquipService
     }
 
     public function getPreparation($equipId) {
-        return $this->equipDBRepository->findByEquipId($equipId);
+        try {
+            return $this->equipDBRepository->findByEquipId($equipId);
+        } catch (EquipNotExistsException|EquipDBException $e) {
+            throw $e;
+        }
     }
 
     public function getRodName($preparationId) {
-        return $this->equipDBRepository->findRodNameByPreparationId($preparationId);
+        try {
+            return $this->equipDBRepository->findRodNameByPreparationId($preparationId);
+        } catch (EquipDBException $e) {
+            throw $e;
+        }
     }
 
     public function getLineName($preparationId) {
-        return $this->equipDBRepository->findLineNameByPreparationId($preparationId);
+        try {
+            return $this->equipDBRepository->findLineNameByPreparationId($preparationId);
+        } catch (EquipDBException $e) {
+            throw $e;
+        }
     }
 
     public function getReelName($preparationId) {
-        return $this->equipDBRepository->findReelNameByPreparationId($preparationId);
+        try {
+            return $this->equipDBRepository->findReelNameByPreparationId($preparationId);
+        } catch (EquipDBException $e) {
+            throw $e;
+        }
     }
 
     public function getHookName($preparationId) {
-        return $this->equipDBRepository->findHookNameByPreparationId($preparationId);
+        try {
+            return $this->equipDBRepository->findHookNameByPreparationId($preparationId);
+        } catch (EquipDBException $e) {
+            throw $e;
+        }
     }
 
     public function getBaitName($preparationId) {
-        return $this->equipDBRepository->findBaitNameByPreparationId($preparationId);
+        try {
+            return $this->equipDBRepository->findBaitNameByPreparationId($preparationId);
+        } catch (EquipDBException $e) {
+            throw $e;
+        }
     }
 
     public function getSinkerName($preparationId) {
-        return $this->equipDBRepository->findSinkerNameByPreparationId($preparationId);
+        try {
+            return $this->equipDBRepository->findSinkerNameByPreparationId($preparationId);
+        } catch (EquipDBException $e) {
+            throw $e;
+        }
     }
 
     public function getRod($rodInfo) {
-        return $this->equipDBRepository->findRodByPreparationId($rodInfo);
+        try {
+            return $this->equipDBRepository->findRodByPreparationId($rodInfo);
+        } catch (EquipDBException|EquipNotExistsException $e) {
+            throw $e;
+        }
     }
 
     public function getLine($lineInfo) {
-        return $this->equipDBRepository->findLineByPreparationId($lineInfo);
+        try {
+            return $this->equipDBRepository->findLineByPreparationId($lineInfo);
+        } catch (EquipDBException|EquipNotExistsException $e) {
+            throw $e;
+        }
     }
 
     public function getReel($reelInfo) {
-        return $this->equipDBRepository->findReelByPreparationId($reelInfo);
+        try {
+            return $this->equipDBRepository->findReelByPreparationId($reelInfo);
+        } catch (EquipDBException|EquipNotExistsException $e) {
+            throw $e;
+        }
     }
 
     public function getHook($hookInfo) {
-        return $this->equipDBRepository->findHookByPreparationId($hookInfo);
+        try {
+            return $this->equipDBRepository->findHookByPreparationId($hookInfo);
+        } catch (EquipDBException|EquipNotExistsException $e) {
+            throw $e;
+        }
     }
 
     public function getBait($baitInfo) {
-        return $this->equipDBRepository->findBaitByPreparationId($baitInfo);
+        try {
+            return $this->equipDBRepository->findBaitByPreparationId($baitInfo);
+        } catch (EquipDBException|EquipNotExistsException $e) {
+            throw $e;
+        }
     }
 
     public function getSinker($sinkerInfo) {
-        return $this->equipDBRepository->findSinkerByPreparationId($sinkerInfo);
+        try {
+            return $this->equipDBRepository->findSinkerByPreparationId($sinkerInfo);
+        } catch (EquipDBException|EquipNotExistsException $e) {
+            throw $e;
+        }
     }
 }

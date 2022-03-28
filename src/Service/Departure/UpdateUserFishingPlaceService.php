@@ -2,12 +2,14 @@
 
 namespace App\Service\Departure;
 
-use App\Domain\Departure\DepartureInfo;
+use App\Infrastructure\Persistence\Map\UserMapDBException;
 use App\Infrastructure\Persistence\Map\UserMapDBRepository;
+use App\Infrastructure\Persistence\User\UserDBException;
 use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
 use App\Service\Boat\GetUserBoatService;
-use App\Service\User\GetUserService;
+use App\Service\Fish\NotFishingStatusException;
 use App\Service\Map\GetMapService;
+use App\Service\User\GetUserService;
 use App\Service\UserAccountUser\GetUserAccountUserService;
 use App\Util\Log;
 use App\Util\SuccessResponseManager;
@@ -34,13 +36,13 @@ class UpdateUserFishingPlaceService
      * @throws UserLevelLimitException
      */
     public function updateUserMap($userId, $mapId) {
-        $userInfo = $this->getUserService->getUser($userId);
-        $userBoatInfo = $this->getUserBoatService->getUserBoat($userId);
-        $mapInfo = $this->getMapService->getMap($mapId);
 
         $result = false;
 
         try {
+            $userInfo = $this->getUserService->getUser($userId);
+            $userBoatInfo = $this->getUserBoatService->getUserBoat($userId);
+            $mapInfo = $this->getMapService->getMap($mapId);
 
             if ($this->isAvailableToDepart($userInfo, $mapInfo, $userBoatInfo)
                 && $this->isAvailableToAccessMap($userInfo, $mapInfo)) {
@@ -65,7 +67,7 @@ class UpdateUserFishingPlaceService
             $result = $needBoatFuelException->response();
         } catch (UserLevelLimitException $userLevelLimitException) {
             $result = $userLevelLimitException->response();
-        } catch (UserAccountUserDBException $e) {
+        } catch (UserAccountUserDBException|UserDBException $e) {
             $result = $e->response();
         }
 
@@ -113,6 +115,10 @@ class UpdateUserFishingPlaceService
     }
 
     public function updateFishingStatus($userId, $fishing) {
-        $this->userMapDBRepository->updateFishingStatus($userId, $fishing);
+        try {
+            $this->userMapDBRepository->updateFishingStatus($userId, $fishing);
+        } catch (UserMapDBException|NotFishingStatusException $e) {
+            throw $e;
+        }
     }
 }
