@@ -6,6 +6,6 @@ use App\Exception\Base\UrukException;
 
 class WeatherDBException extends UrukException
 {
-    protected $code = "8000";
+    protected $code = "17000";
     protected $message = "Weather DB 오류";
 }
