@@ -2,7 +2,7 @@
 
 namespace App\Service\Auction;
 
-use App\Infrastructure\Persistence\Auction\UserFishAuctionDBException;
+use App\Exception\Auction\UserFishAuctionDBException;
 use App\Infrastructure\Persistence\Auction\UserFishAuctionDBRepository;
 
 class UpdateUserFishAuctionService

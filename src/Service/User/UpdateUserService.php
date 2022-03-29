@@ -2,7 +2,7 @@
 
 namespace App\Service\User;
 
-use App\Infrastructure\Persistence\User\UserDBException;
+use App\Exception\User\UserDBException;
 use App\Infrastructure\Persistence\User\UserDBRepository;
 
 class UpdateUserService

@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\User;
 
 use App\Domain\User\User;
+use App\Exception\User\UserDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use PDOException;
 

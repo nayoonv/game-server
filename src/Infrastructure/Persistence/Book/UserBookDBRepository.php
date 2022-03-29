@@ -4,6 +4,7 @@ namespace App\Infrastructure\Persistence\Book;
 
 use App\Domain\Book\UserBook;
 use App\Domain\Book\UserBookWithMapInfo;
+use App\Exception\Book\UserBookDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
 class UserBookDBRepository extends BaseDBRepository

@@ -2,7 +2,7 @@
 
 namespace App\Service\Book;
 
-use App\Infrastructure\Persistence\Book\UserBookDBException;
+use App\Exception\Book\UserBookDBException;
 use App\Infrastructure\Persistence\Book\UserBookDBRepository;
 
 class UpdateUserBookService

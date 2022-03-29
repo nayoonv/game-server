@@ -3,7 +3,9 @@
 namespace App\Infrastructure\Persistence\Fish;
 
 use App\Domain\Fishing\Fish;
+use App\Exception\Fish\FishDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
+use PDOException;
 
 class FishDBRepository extends BaseDBRepository
 {
@@ -28,8 +30,8 @@ class FishDBRepository extends BaseDBRepository
                         , $fish['fish_grade_id'], $fish['max_length'], $fish['max_weight']));
                 }
             }
-        } catch(FishNotExistsException $exception) {
-
+        } catch(PDOException $exception) {
+            throw new FishDBException();
         }
 
         return $result;

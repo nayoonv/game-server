@@ -4,9 +4,9 @@ namespace App\Infrastructure\Persistence\UserAccount;
 
 use App\Domain\UserAccount\LoginUser;
 use App\Domain\UserAccount\UserAccount;
+use App\Exception\Signup\UserAccountDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use PDOException;
-use PHPUnit\TextUI\XmlConfiguration\Logging\Logging;
 
 class UserAccountDBRepository extends BaseDBRepository
 {

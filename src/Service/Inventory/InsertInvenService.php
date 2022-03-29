@@ -2,9 +2,9 @@
 
 namespace App\Service\Inventory;
 
+use App\Exception\Fish\InvenInsertFishException;
+use App\Exception\Store\InvenInsertEquipException;
 use App\Infrastructure\Persistence\Inventory\InvenDBRepository;
-use App\Infrastructure\Persistence\Inventory\InvenInsertEquipException;
-use App\Infrastructure\Persistence\Inventory\InvenInsertFishException;
 
 class InsertInvenService
 {

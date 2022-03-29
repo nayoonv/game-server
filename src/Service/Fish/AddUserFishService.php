@@ -3,18 +3,18 @@
 namespace App\Service\Fish;
 
 use App\Domain\Fishing\FishingFish;
-
+use App\Exception\Fish\DeepDepthException;
+use App\Exception\Fish\FailToCatchFishException;
+use App\Exception\Fish\InvenInsertFishException;
+use App\Exception\Fish\NotAppearFishException;
+use App\Exception\Fish\NotInsertUserFishException;
+use App\Exception\Fish\UserFishDBException;
 use App\Infrastructure\Persistence\Fish\FishDBRepository;
-use App\Infrastructure\Persistence\Fish\NotInsertUserFishException;
-use App\Infrastructure\Persistence\Fish\UserFishDBException;
 use App\Infrastructure\Persistence\Fish\UserFishDBRepository;
-use App\Infrastructure\Persistence\Inventory\InvenInsertFishException;
-
 use App\Service\Inventory\InsertInvenService;
 use App\Service\Map\GetMapService;
 use App\Service\UserCurrentEquip\GetUserCurrentEquipService;
 use App\Service\Weather\ReadWeatherService;
-
 use App\Util\SuccessResponseManager;
 
 class AddUserFishService

@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Persistence\UserAccountUser;
 
+use App\Exception\Login\UserAccountUserDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
-use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
 use PDOException;
 
 class UserAccountUserDBRepository extends BaseDBRepository

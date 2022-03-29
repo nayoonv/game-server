@@ -2,12 +2,14 @@
 
 namespace App\Service\Store;
 
-use App\Infrastructure\Persistence\Inventory\InvenInsertEquipException;
-use App\Infrastructure\Persistence\Store\GoodsNotExistsException;
-use App\Infrastructure\Persistence\Store\StoreDBException;
+use App\Exception\Login\UserAccountUserDBException;
+use App\Exception\Store\GoodsNotExistsException;
+use App\Exception\Store\InvenInsertEquipException;
+use App\Exception\Store\StoreDBException;
+use App\Exception\Store\UserAssetNotEnoughException;
+use App\Exception\Store\UserEquipInsertException;
+use App\Exception\User\UserDBException;
 use App\Infrastructure\Persistence\Store\StoreDBRepository;
-use App\Infrastructure\Persistence\User\UserDBException;
-use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
 use App\Service\Inventory\InsertInvenService;
 use App\Service\User\GetUserService;
 use App\Service\User\UpdateUserService;

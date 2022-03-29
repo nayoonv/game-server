@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\GiftBox;
 
 use App\Domain\UserGiftBox\UserGiftBox;
+use App\Exception\GiftBox\UserGiftBoxDBException;
 
 class UserGiftBoxDBRepository
 {

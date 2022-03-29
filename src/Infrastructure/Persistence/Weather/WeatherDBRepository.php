@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\Weather;
 
 use App\Domain\Weather\Weather;
+use App\Exception\Weather\WeatherDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
 class WeatherDBRepository extends BaseDBRepository

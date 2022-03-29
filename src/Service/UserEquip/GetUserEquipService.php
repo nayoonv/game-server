@@ -2,8 +2,8 @@
 
 namespace App\Service\UserEquip;
 
+use App\Exception\Equip\UserEquipDBException;
 use App\Infrastructure\Persistence\Equip\UserEquipDBRepository;
-use App\Infrastructure\Persistence\Equip\UserEquipDBException;
 
 class GetUserEquipService
 {

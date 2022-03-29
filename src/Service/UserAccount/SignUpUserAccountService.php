@@ -2,7 +2,9 @@
 
 namespace App\Service\UserAccount;
 
-use App\Infrastructure\Persistence\UserAccount\UserAccountDBException;
+use App\Exception\Signup\DuplicateEmailException;
+use App\Exception\Signup\NoEmailInputException;
+use App\Exception\Signup\UserAccountDBException;
 use App\Infrastructure\Persistence\UserAccount\UserAccountDBRepository;
 use App\Util\Log;
 use App\Util\SuccessResponseManager;

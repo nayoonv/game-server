@@ -3,11 +3,11 @@
 namespace App\Service\Weather;
 
 use App\Domain\Weather\Weather;
-use App\Infrastructure\Persistence\Weather\TideDBException;
+use App\Exception\Weather\NotReadWeatherException;
+use App\Exception\Weather\TideDBException;
+use App\Exception\Weather\WeatherDBException;
 use App\Infrastructure\Persistence\Weather\TideDBRepository;
-use App\Infrastructure\Persistence\Weather\WeatherDBException;
 use App\Infrastructure\Persistence\Weather\WeatherDBRepository;
-use App\Util\SuccessResponseManager;
 
 class ReadWeatherService
 {

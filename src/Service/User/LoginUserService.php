@@ -3,13 +3,12 @@
 namespace App\Service\User;
 
 use App\Domain\User\User;
-use App\Infrastructure\Persistence\Map\UserMapDBException;
-use App\Infrastructure\Persistence\User\UserDBException;
+use App\Exception\Boat\NotCreateUserBoatException;
+use App\Exception\Login\UserAccountUserDBException;
+use App\Exception\Map\UserMapDBException;
+use App\Exception\User\UserDBException;
 use App\Infrastructure\Persistence\User\UserDBRepository;
-use App\Infrastructure\Persistence\UserAccount\UserAccountDBException;
-use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
 use App\Service\Boat\CreateBoatService;
-use App\Service\Boat\NotCreateUserBoatException;
 use App\Service\Map\CreateUserMapService;
 use App\Service\UserAccountUser\LoginUserAccountUserService;
 

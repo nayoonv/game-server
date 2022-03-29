@@ -2,7 +2,7 @@
 
 namespace App\Service\UserAccountUser;
 
-use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
+use App\Exception\Login\UserAccountUserDBException;
 use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBRepository;
 
 class LoginUserAccountUserService

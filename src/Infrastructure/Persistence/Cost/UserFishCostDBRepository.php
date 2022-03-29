@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Persistence\Cost;
 
+use App\Exception\FishCost\UserFishCostDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
-use App\Service\Cost\UserFishCostDBException;
 use PDOException;
 
 class UserFishCostDBRepository extends BaseDBRepository

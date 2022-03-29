@@ -3,8 +3,8 @@
 namespace App\Infrastructure\Persistence\Boat;
 
 use App\Domain\Boat\UserBoat;
+use App\Exception\Boat\UserBoatDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
-use App\Service\Boat\NotCreateUserBoatException;
 
 class UserBoatDBRepository extends BaseDBRepository
 {

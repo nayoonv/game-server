@@ -2,9 +2,9 @@
 
 namespace App\Service\UserEquip;
 
-use App\Infrastructure\Persistence\Equip\EquipDBException;
-use App\Infrastructure\Persistence\Equip\EquipNotExistsException;
-use App\Infrastructure\Persistence\Equip\UserEquipDBException;
+use App\Exception\Book\EquipNotExistsException;
+use App\Exception\Equip\EquipDBException;
+use App\Exception\Equip\UserEquipDBException;
 use App\Infrastructure\Persistence\Equip\UserEquipDBRepository;
 use App\Service\Equip\GetEquipService;
 

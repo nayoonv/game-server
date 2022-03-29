@@ -3,6 +3,8 @@
 namespace App\Infrastructure\Persistence\Store;
 
 use App\Domain\Store\Store;
+use App\Exception\Store\GoodsNotExistsException;
+use App\Exception\Store\StoreDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
 class StoreDBRepository extends BaseDBRepository

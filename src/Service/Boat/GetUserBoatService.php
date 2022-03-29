@@ -2,7 +2,8 @@
 
 namespace App\Service\Boat;
 
-use App\Infrastructure\Persistence\Boat\UserBoatDBException;
+use App\Exception\Boat\UserBoatDBException;
+use App\Exception\Boat\UserBoatNotExistsException;
 use App\Infrastructure\Persistence\Boat\UserBoatDBRepository;
 
 class GetUserBoatService

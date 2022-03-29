@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\Auction;
 
 use App\Domain\Auction\UserFishAuction;
+use App\Exception\Auction\UserFishAuctionDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use PDOException;
 

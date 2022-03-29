@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\Map;
 
 use App\Domain\Map\Map;
+use App\Exception\Map\MapDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
 class MapDBRepository extends BaseDBRepository

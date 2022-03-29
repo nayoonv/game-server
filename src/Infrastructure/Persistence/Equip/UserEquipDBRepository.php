@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence\Equip;
 use App\Domain\Equip\UserEquip;
 use App\Domain\Equip\UserEquipUpgradeAvailable;
 use App\Domain\Equip\UserEquipUpgradeUnavailable;
+use App\Exception\Equip\UserEquipDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use Exception;
 

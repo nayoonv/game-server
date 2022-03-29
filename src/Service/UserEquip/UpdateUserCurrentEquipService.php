@@ -2,16 +2,16 @@
 
 namespace App\Service\UserEquip;
 
-use App\Infrastructure\Persistence\Equip\UserEquipDBException;
-use App\Infrastructure\Persistence\Inventory\InvenDBException;
-use App\Infrastructure\Persistence\Inventory\ItemNotExistsException;
-use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
+use App\Exception\Equip\UserEquipDBException;
+use App\Exception\Inven\InvalidEquipException;
+use App\Exception\Inven\InvenDBException;
+use App\Exception\Inven\ItemNotExistsException;
+use App\Exception\Login\UserAccountUserDBException;
 use App\Infrastructure\Persistence\UserCurrentEquip\UserCurrentEquipDBRepository;
 use App\Service\Equip\GetEquipService;
 use App\Service\Inventory\ReadInvenService;
 use App\Service\UserAccountUser\GetUserAccountUserService;
 use App\Service\UserCurrentEquip\GetUserCurrentEquipService;
-
 use App\Util\Log;
 use App\Util\SuccessResponseManager;
 

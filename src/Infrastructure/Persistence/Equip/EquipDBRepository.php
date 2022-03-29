@@ -9,6 +9,8 @@ use App\Domain\Equip\CurrentReel;
 use App\Domain\Equip\CurrentRod;
 use App\Domain\Equip\CurrentSinker;
 use App\Domain\Equip\Equip;
+use App\Exception\Book\EquipNotExistsException;
+use App\Exception\Equip\EquipDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use Exception;
 

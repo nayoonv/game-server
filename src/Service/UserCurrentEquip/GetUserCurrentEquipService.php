@@ -3,12 +3,11 @@
 namespace App\Service\UserCurrentEquip;
 
 use App\Domain\UserCurrentEquip\UserCurrentEquipDetail;
-use App\Infrastructure\Persistence\Equip\EquipDBException;
-use App\Infrastructure\Persistence\Equip\EquipNotExistsException;
-use App\Infrastructure\Persistence\User\UserDBException;
-use App\Infrastructure\Persistence\UserCurrentEquip\UserCurrentEquipDBException;
+use App\Exception\Book\EquipNotExistsException;
+use App\Exception\Equip\EquipDBException;
+use App\Exception\Equip\UserCurrentEquipDBException;
+use App\Exception\Equip\UserCurrentEquipNotExistsException;
 use App\Infrastructure\Persistence\UserCurrentEquip\UserCurrentEquipDBRepository;
-use App\Infrastructure\Persistence\UserCurrentEquip\UserCurrentEquipNotExistsException;
 use App\Service\Equip\GetEquipService;
 use App\Service\UserEquip\GetUserEquipService;
 use App\Util\SuccessResponseManager;

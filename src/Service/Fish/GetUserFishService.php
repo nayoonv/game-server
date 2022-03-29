@@ -2,7 +2,7 @@
 
 namespace App\Service\Fish;
 
-use App\Infrastructure\Persistence\Fish\UserFishDBException;
+use App\Exception\Fish\UserFishDBException;
 use App\Infrastructure\Persistence\Fish\UserFishDBRepository;
 
 class GetUserFishService

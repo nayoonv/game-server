@@ -2,7 +2,7 @@
 
 namespace App\Service\Map;
 
-use App\Infrastructure\Persistence\Map\UserMapDBException;
+use App\Exception\Map\UserMapDBException;
 use App\Infrastructure\Persistence\Map\UserMapDBRepository;
 
 class CreateUserMapService

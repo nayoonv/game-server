@@ -2,6 +2,7 @@
 
 namespace App\Service\Boat;
 
+use App\Exception\Boat\NotCreateUserBoatException;
 use App\Infrastructure\Persistence\Boat\UserBoatDBRepository;
 
 class CreateBoatService

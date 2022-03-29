@@ -4,9 +4,9 @@ namespace App\Infrastructure\Persistence\Map;
 
 use App\Domain\Departure\DepartureInfo;
 use App\Domain\UserFishingPlace\UserFishingPlace;
+use App\Exception\Fish\NotFishingStatusException;
+use App\Exception\Map\UserMapDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
-use App\Service\Fish\NotFishingStatusException;
-use App\Service\Map\NotCreateUserMapException;
 
 class UserMapDBRepository extends BaseDBRepository
 {

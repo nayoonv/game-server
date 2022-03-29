@@ -2,17 +2,17 @@
 
 namespace App\Service\Arrival;
 
-use App\Infrastructure\Persistence\Book\BookPrizeDBException;
-use App\Infrastructure\Persistence\Book\BookPrizeNotExistsException;
-use App\Infrastructure\Persistence\Book\UserBookDBException;
-use App\Infrastructure\Persistence\Fish\UserFishDBException;
-use App\Infrastructure\Persistence\Map\UserMapDBException;
+use App\Exception\Arrival\NotUserFishWhileFishingException;
+use App\Exception\Book\BookPrizeDBException;
+use App\Exception\Book\BookPrizeNotExistsException;
+use App\Exception\Book\UserBookDBException;
+use App\Exception\Fish\NotFishingStatusException;
+use App\Exception\Fish\UserFishDBException;
+use App\Exception\Map\UserMapDBException;
 use App\Service\Book\GetUserBookService;
 use App\Service\Book\UpdateUserBookPrizeService;
 use App\Service\Departure\UpdateUserFishingPlaceService;
 use App\Service\Fish\GetUserFishService;
-use App\Service\Fish\NotFishingStatusException;
-use App\Service\Fish\NotUserFishWhileFishingException;
 use App\Service\Fish\UpdateUserFishService;
 use App\Util\SuccessResponseManager;
 

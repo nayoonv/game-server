@@ -2,9 +2,9 @@
 
 namespace App\Service\Inventory;
 
-use App\Infrastructure\Persistence\Inventory\InvenDBException;
+use App\Exception\Inven\InvenDBException;
+use App\Exception\Inven\ItemNotExistsException;
 use App\Infrastructure\Persistence\Inventory\InvenDBRepository;
-use App\Infrastructure\Persistence\Inventory\ItemNotExistsException;
 use App\Service\Equip\GetEquipService;
 use App\Util\Log;
 use App\Util\SuccessResponseManager;

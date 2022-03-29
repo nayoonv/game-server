@@ -2,13 +2,14 @@
 
 namespace App\Service\UserAccount;
 
-use App\Infrastructure\Persistence\Map\UserMapDBException;
-use App\Infrastructure\Persistence\User\UserDBException;
-use App\Infrastructure\Persistence\UserAccount\InvalidPasswordException;
-use App\Infrastructure\Persistence\UserAccount\UserAccountDBException;
+use App\Exception\Boat\NotCreateUserBoatException;
+use App\Exception\Login\InvalidEmailException;
+use App\Exception\Login\InvalidPasswordException;
+use App\Exception\Login\UserAccountUserDBException;
+use App\Exception\Map\UserMapDBException;
+use App\Exception\Signup\UserAccountDBException;
+use App\Exception\User\UserDBException;
 use App\Infrastructure\Persistence\UserAccount\UserAccountDBRepository;
-use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBException;
-use App\Service\Boat\NotCreateUserBoatException;
 use App\Service\User\LoginUserService;
 use App\Util\JWTManager;
 use App\Util\Log;

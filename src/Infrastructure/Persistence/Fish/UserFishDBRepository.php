@@ -3,9 +3,11 @@
 namespace App\Infrastructure\Persistence\Fish;
 
 use App\Domain\Book\UserBookWithMapInfo;
-use PDOException;
 use App\Domain\Fishing\UserFish;
+use App\Exception\Fish\NotInsertUserFishException;
+use App\Exception\Fish\UserFishDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
+use PDOException;
 
 class UserFishDBRepository extends BaseDBRepository
 {

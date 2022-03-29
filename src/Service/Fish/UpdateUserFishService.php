@@ -2,11 +2,11 @@
 
 namespace App\Service\Fish;
 
-use App\Infrastructure\Persistence\Book\UserBookDBException;
-use App\Infrastructure\Persistence\Fish\UserFishDBException;
+use App\Exception\Book\UserBookDBException;
+use App\Exception\Book\UserBookNotExistsException;
+use App\Exception\Fish\UserFishDBException;
 use App\Infrastructure\Persistence\Fish\UserFishDBRepository;
 use App\Service\Book\UpdateUserBookService;
-use App\Service\Book\UserBookNotExistsException;
 use function App\Service\Arrival\count;
 
 class UpdateUserFishService

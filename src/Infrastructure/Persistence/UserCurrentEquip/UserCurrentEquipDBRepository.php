@@ -3,6 +3,8 @@
 namespace App\Infrastructure\Persistence\UserCurrentEquip;
 
 use App\Domain\UserCurrentEquip\UserCurrentEquip;
+use App\Exception\Equip\UserCurrentEquipDBException;
+use App\Exception\Equip\UserCurrentEquipNotExistsException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use PDOException;
 

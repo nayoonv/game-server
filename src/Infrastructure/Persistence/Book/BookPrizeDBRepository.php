@@ -3,6 +3,9 @@
 namespace App\Infrastructure\Persistence\Book;
 
 use App\Domain\Book\BookPrize;
+use App\Exception\Book\BookPrizeDBException;
+use App\Exception\Book\BookPrizeNotExistsBetweenCountException;
+use App\Exception\Book\BookPrizeNotExistsException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use PDOException;
 

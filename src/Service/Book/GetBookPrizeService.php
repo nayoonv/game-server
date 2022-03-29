@@ -2,9 +2,9 @@
 
 namespace App\Service\Book;
 
-use App\Infrastructure\Persistence\Book\BookPrizeDBException;
+use App\Exception\Book\BookPrizeDBException;
+use App\Exception\Book\BookPrizeNotExistsException;
 use App\Infrastructure\Persistence\Book\BookPrizeDBRepository;
-use App\Infrastructure\Persistence\Book\BookPrizeNotExistsException;
 
 class GetBookPrizeService
 {

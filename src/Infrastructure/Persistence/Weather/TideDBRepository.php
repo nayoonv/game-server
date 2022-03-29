@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\Weather;
 
 use App\Domain\Weather\Tide;
+use App\Exception\Weather\TideDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
 class TideDBRepository extends BaseDBRepository

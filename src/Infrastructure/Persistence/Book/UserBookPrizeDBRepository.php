@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Persistence\Book;
 
+use App\Exception\Book\UserBookPrizeDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
 class UserBookPrizeDBRepository extends BaseDBRepository

@@ -2,9 +2,9 @@
 
 namespace App\Service\Boat;
 
+use App\Exception\Departure\NeedBoatDurabilityException;
+use App\Exception\Fish\NotFishingStatusException;
 use App\Infrastructure\Persistence\Boat\UserBoatDBRepository;
-use App\Service\Departure\NeedBoatDurabilityException;
-use App\Service\Fish\NotFishingStatusException;
 use App\Service\Map\GetMapService;
 
 class UpdateUserBoatWhileFishingService

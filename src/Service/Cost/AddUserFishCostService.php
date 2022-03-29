@@ -2,9 +2,11 @@
 
 namespace App\Service\Cost;
 
-use App\Infrastructure\Persistence\Auction\UserFishAuctionDBException;
+use App\Exception\Auction\UserFishAuctionDBException;
+use App\Exception\Fish\InvalidUserFishException;
+use App\Exception\Fish\UserFishDBException;
+use App\Exception\FishCost\UserFishCostDBException;
 use App\Infrastructure\Persistence\Cost\UserFishCostDBRepository;
-use App\Infrastructure\Persistence\Fish\UserFishDBException;
 use App\Service\Auction\UpdateUserFishAuctionService;
 use App\Service\Fish\GetUserFishService;
 use App\Service\Fish\UpdateUserFishService;
