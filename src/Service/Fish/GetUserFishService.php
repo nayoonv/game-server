@@ -2,7 +2,7 @@
 
 namespace App\Service\Fish;
 
-use App\Exception\Fish\UserFishDBException;
+use App\Exception\Base\UrukException;
 use App\Infrastructure\Persistence\Fish\UserFishDBRepository;
 
 class GetUserFishService
@@ -11,24 +11,27 @@ class GetUserFishService
     public function __construct(UserFishDBRepository $userFishDBRepository) {
         $this->userFishDBRepository = $userFishDBRepository;
     }
+
+    // 정산
     public function getUserFishWhileFishing($userId){
         try {
             return $this->userFishDBRepository->findBeforeCalUnchecked($userId);
-        } catch (UserFishDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
+    //
     public function getUserFishNotInUserBook($userId) {
         try {
             return $this->userFishDBRepository->findNotInUserBookByUserId($userId);
-        } catch (UserFishDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
     public function getUserFish($userFishId) {
         try {
             return $this->userFishDBRepository->findByUserFishId($userFishId);
-        } catch(UserFishDBException $e) {
+        } catch(UrukException $e) {
             throw $e;
         }
     }

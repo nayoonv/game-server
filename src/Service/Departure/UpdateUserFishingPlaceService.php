@@ -2,14 +2,12 @@
 
 namespace App\Service\Departure;
 
+use App\Exception\Base\UrukException;
 use App\Exception\Departure\NeedBoatDurabilityException;
 use App\Exception\Departure\NeedBoatFuelException;
 use App\Exception\Departure\NeedUserFatigueException;
 use App\Exception\Departure\UserLevelLimitException;
-use App\Exception\Fish\NotFishingStatusException;
-use App\Exception\Login\UserAccountUserDBException;
-use App\Exception\Map\UserMapDBException;
-use App\Exception\User\UserDBException;
+
 use App\Infrastructure\Persistence\Map\UserMapDBRepository;
 use App\Service\Boat\GetUserBoatService;
 use App\Service\Map\GetMapService;
@@ -40,6 +38,7 @@ class UpdateUserFishingPlaceService
     /**
      * @throws UserLevelLimitException
      */
+    // 낚시 지역을 변경하고자 할 때
     public function updateUserMap($userId, $mapId)
     {
 
@@ -48,22 +47,24 @@ class UpdateUserFishingPlaceService
             $userBoatInfo = $this->getUserBoatService->getUserBoat($userId);
             $mapInfo = $this->getMapService->getMap($mapId);
 
+            // 출항 상태인지 체크 && 출항하고자 하는 지역에 나가도 되는 사용자 정보인지 체크
             if ($this->isAvailableToDepart($userInfo, $mapInfo, $userBoatInfo)
                 && $this->isAvailableToAccessMap($userInfo, $mapInfo)) {
                 /*
                  * user_fishing_place에서 사용자가 이동하고자 하는 위치로 이동시키고 낚시 중으로 상태를 변경한다.
                  * fishing = 0 -> 입항, 1 -> 출항
                  */
-
+                // 출항 상태 변경
                 $this->userMapDBRepository->updateUserMap($userId, $mapId);
 
+                // 출항한 지역에 대한 정보 가지고 오기
                 $result = $this->readDepartureInfo($userId, $mapId);
                 $hiveId = $this->getUserAccountUserService->getHiveId($userId);
                 Log::write("DEPART"
                     , ['hive_id' => $hiveId, 'user_id' => $userId, 'user_level' => $userInfo->getLevel(), 'map_id' => $mapId]);
                 return SuccessResponseManager::response($result);
             }
-        } catch (NeedBoatDurabilityException|NeedUserFatigueException|NeedBoatFuelException|UserDBException|UserAccountUserDBException|UserMapDBException $e) {
+        } catch (UrukException $e) {
             return $e->response();
         }
     }
@@ -80,7 +81,7 @@ class UpdateUserFishingPlaceService
             }
 
             return $result;
-        } catch (UserMapDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -122,7 +123,7 @@ class UpdateUserFishingPlaceService
     {
         try {
             $this->userMapDBRepository->updateFishingStatus($userId, $fishing);
-        } catch (UserMapDBException|NotFishingStatusException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }

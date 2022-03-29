@@ -2,9 +2,8 @@
 
 namespace App\Service\Fish;
 
-use App\Exception\Book\UserBookDBException;
+use App\Exception\Base\UrukException;
 use App\Exception\Book\UserBookNotExistsException;
-use App\Exception\Fish\UserFishDBException;
 use App\Infrastructure\Persistence\Fish\UserFishDBRepository;
 use App\Service\Book\UpdateUserBookService;
 use function App\Service\Arrival\count;
@@ -35,7 +34,7 @@ class UpdateUserFishService
                 throw new UserBookNotExistsException();
             }
             return $userBookFishList;
-        } catch (UserFishDBException|UserBookNotExistsException|UserBookDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -44,7 +43,7 @@ class UpdateUserFishService
     {
         try {
             $this->userFishDBRepository->deleteByUserFishId($userFishId);
-        } catch(UserFishDBException $e) {
+        } catch(UrukException $e) {
             throw $e;
         }
     }

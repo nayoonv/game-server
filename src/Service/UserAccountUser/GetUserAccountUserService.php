@@ -15,10 +15,9 @@ class GetUserAccountUserService
 
     public function getHiveId($userId) {
         try {
-            $hiveId = $this->userAccountUserDBRepository->findHiveIdByUserId($userId);
+            return $this->userAccountUserDBRepository->findHiveIdByUserId($userId);
         } catch (UserAccountUserDBException $e) {
             throw $e;
         }
-        return $hiveId;
     }
 }

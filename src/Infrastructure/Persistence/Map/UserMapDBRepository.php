@@ -4,6 +4,7 @@ namespace App\Infrastructure\Persistence\Map;
 
 use App\Domain\Departure\DepartureInfo;
 use App\Domain\UserFishingPlace\UserFishingPlace;
+use App\Exception\Base\UrukException;
 use App\Exception\Fish\NotFishingStatusException;
 use App\Exception\Map\UserMapDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
@@ -48,10 +49,10 @@ class UserMapDBRepository extends BaseDBRepository
                 throw new NotFishingStatusException();
 
             return $result;
-        } catch (Exception $e) {
-            throw new UserMapDBException();
         } catch (NotFishingStatusException $e) {
             throw $e;
+        } catch (Exception $e) {
+            throw new UserMapDBException();
         }
     }
 
@@ -102,7 +103,11 @@ class UserMapDBRepository extends BaseDBRepository
 
             if ($result) {
                 $result = new UserFishingPlace($result['map_id'], $result['max_depth'], $result['fishing']);
+            } else {
+                throw new UserFishingPlaceNotExistsException();
             }
+        } catch (UserFishingPlaceNotExistsException $e) {
+            throw $e;
         } catch (Exception $exception) {
             throw new UserMapDBException();
         }

@@ -3,6 +3,7 @@
 namespace App\Service\UserCurrentEquip;
 
 use App\Domain\UserCurrentEquip\UserCurrentEquipDetail;
+use App\Exception\Base\UrukException;
 use App\Exception\Book\EquipNotExistsException;
 use App\Exception\Equip\EquipDBException;
 use App\Exception\Equip\UserCurrentEquipDBException;
@@ -30,8 +31,8 @@ class GetUserCurrentEquipService
     {
         try {
             return SuccessResponseManager::response($this->getUserCurrentEquipInfo($userId));
-        } catch (EquipDBException|EquipNotExistsException $e) {
-            throw $e;
+        } catch (UrukException $e) {
+            return $e->response();
         }
     }
 
@@ -39,7 +40,7 @@ class GetUserCurrentEquipService
     {
         try {
             return $this->userCurrentEquipDBRepository->findByUserId($userId);
-        } catch (UserCurrentEquipDBException|UserCurrentEquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -70,7 +71,7 @@ class GetUserCurrentEquipService
 
             return new UserCurrentEquipDetail($rod, $line, $reel, $hook, $bait, $sinker);
 
-        } catch (EquipDBException|EquipNotExistsException|UserCurrentEquipDBException|UserCurrentEquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -79,7 +80,7 @@ class GetUserCurrentEquipService
     {
         try {
             return $this->getEquipService->getPreparation($equipId);
-        } catch (Exception $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -93,7 +94,7 @@ class GetUserCurrentEquipService
             $userRodInfo->setPreparation($preparationInfo->getPreparationId(), $preparationInfo->getPreparationTypeId());
 
             return $this->getEquipService->getRod($userRodInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -107,7 +108,7 @@ class GetUserCurrentEquipService
             $userLineInfo->setPreparation($preparationInfo->getPreparationId(), $preparationInfo->getPreparationTypeId());
 
             return $this->getEquipService->getLine($userLineInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -121,7 +122,7 @@ class GetUserCurrentEquipService
             $userReelInfo->setPreparation($preparationInfo->getPreparationId(), $preparationInfo->getPreparationTypeId());
 
             return $this->getEquipService->getReel($userReelInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -135,7 +136,7 @@ class GetUserCurrentEquipService
             $userHookInfo->setPreparation($preparationInfo->getPreparationId(), $preparationInfo->getPreparationTypeId());
 
             return $this->getEquipService->getHook($userHookInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -149,7 +150,7 @@ class GetUserCurrentEquipService
             $userBaitInfo->setPreparation($preparationInfo->getPreparationId(), $preparationInfo->getPreparationTypeId());
 
             return $this->getEquipService->getBait($userBaitInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -163,7 +164,7 @@ class GetUserCurrentEquipService
             $userSinkerInfo->setPreparation($preparationInfo->getPreparationId(), $preparationInfo->getPreparationTypeId());
 
             return $this->getEquipService->getSinker($userSinkerInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }

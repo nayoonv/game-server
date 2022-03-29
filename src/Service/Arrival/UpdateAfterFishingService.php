@@ -3,6 +3,7 @@
 namespace App\Service\Arrival;
 
 use App\Exception\Arrival\NotUserFishWhileFishingException;
+use App\Exception\Base\UrukException;
 use App\Exception\Book\BookPrizeDBException;
 use App\Exception\Book\BookPrizeNotExistsException;
 use App\Exception\Book\UserBookDBException;
@@ -42,7 +43,6 @@ class UpdateAfterFishingService
         try {
             // 입항, 입항 실패 시, NotFishingStatusException 던지기
             $this->updateUserFishingPlaceService->updateFishingStatus($userId, 0);
-//                throw new NotFishingStatusException();
 
             $fishCaughtList = $this->getUserFishService->getUserFishWhileFishing($userId);
 
@@ -50,9 +50,11 @@ class UpdateAfterFishingService
                 array_push($result, ['fish_caught_list' => $fishCaughtList]);
 
                 // 도감에 등록되지 않은 물고기 list 보여주고 updatebeforecal
+                // 정산하지 않은 물고기들 중 도감에 등록되지 않은 물고기가 있는지 체크하고 정산 처리해준다.
                 $addedUserBookFish = $this->updateUserFishService->addFishInUserBook($userId);
                 array_push($result, ['added_user_book_fish' => $addedUserBookFish]);
-
+                
+                // 도감 상금 부분
                 $prize = $this->prizeFromUserBook($userId);
                 if ($prize) {
                     array_push($result, ['prize' => $prize]);
@@ -64,8 +66,7 @@ class UpdateAfterFishingService
 
             return SuccessResponseManager::response($result);
 
-        } catch (NotFishingStatusException|NotUserFishWhileFishingException|BookPrizeDBException
-            |BookPrizeNotExistsException|UserMapDBException|UserFishDBException|UserBookDBException $e) {
+        } catch (UrukException $e) {
             return $e->response();
         }
     }
@@ -77,7 +78,7 @@ class UpdateAfterFishingService
 
             return $this->updateUserBookPrizeService->getUserBookPrize($userId, $totalCount);
 
-        } catch (BookPrizeDBException|BookPrizeNotExistsException|UserBookDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }

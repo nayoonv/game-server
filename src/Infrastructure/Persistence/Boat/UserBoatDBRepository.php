@@ -3,7 +3,9 @@
 namespace App\Infrastructure\Persistence\Boat;
 
 use App\Domain\Boat\UserBoat;
+use App\Exception\Base\UrukException;
 use App\Exception\Boat\UserBoatDBException;
+use App\Exception\Boat\UserBoatNotExistsException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 
 class UserBoatDBRepository extends BaseDBRepository
@@ -38,11 +40,14 @@ class UserBoatDBRepository extends BaseDBRepository
             $result = $sth->fetch();
             if ($result) {
                 $result = new UserBoat($result['user_boat_level'], $result['user_boat_durability'], $result['user_boat_fuel']);
-            }
+                return $result;
+            } else
+                throw new UserBoatNotExistsException();
         } catch (Exception $exception) {
             throw new UserBoatDBException();
+        } catch(UrukException $e) {
+            throw $e;
         }
-        return $result;
     }
     public function updateUserBoatDurability($userId, $mapId, $durability) {
         $query = "update user_boat set map_id = :map_id and user_boat_durability = :durability where user_id = :user_id;";

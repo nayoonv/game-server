@@ -19,8 +19,8 @@ class UpdateUserGiftBoxReceivedAction
         $userId = $body['user_id'];
         $userGiftBoxId = $body['user_gift_box_id'];
 
-        $this->userGiftBoxService->updateUserGiftBox($userGiftBoxId);
-        $result = "선물을수령하였습니다.";
+        $result = $this->userGiftBoxService->updateUserGiftBox($userGiftBoxId);
+
         $response->getBody()->write($result);
 
         return $response;

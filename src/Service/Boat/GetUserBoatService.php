@@ -2,6 +2,7 @@
 
 namespace App\Service\Boat;
 
+use App\Exception\Base\UrukException;
 use App\Exception\Boat\UserBoatDBException;
 use App\Exception\Boat\UserBoatNotExistsException;
 use App\Infrastructure\Persistence\Boat\UserBoatDBRepository;
@@ -15,13 +16,8 @@ class GetUserBoatService
 
     public function getUserBoat($userId) {
         try {
-            $result = $this->userBoatDBRepository->findByUserId($userId);
-
-            if (!$result)
-                throw new UserBoatNotExistsException();
-
-            return $result;
-        } catch(UserBoatDBException | UserBoatNotExistsException $e) {
+            return $this->userBoatDBRepository->findByUserId($userId);
+        } catch(UrukException $e) {
             throw $e;
         }
     }

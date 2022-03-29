@@ -4,7 +4,9 @@ namespace App\Infrastructure\Persistence\UserAccount;
 
 use App\Domain\UserAccount\LoginUser;
 use App\Domain\UserAccount\UserAccount;
+use App\Exception\Base\UrukException;
 use App\Exception\Signup\UserAccountDBException;
+use App\Exception\Signup\UserAccountNotExistsException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use PDOException;
 
@@ -12,7 +14,6 @@ class UserAccountDBRepository extends BaseDBRepository
 {
     public function findUserAccountByHiveId($hiveId): UserAccount {
         $query = "select hive_id, nation_id, language_id, name, email from user_account where hive_id = :hive_id";
-        $result = null;
         try{
             $sth = $this->db->prepare($query);
             $sth->bindParam(':hive_id', $hiveId);
@@ -21,38 +22,17 @@ class UserAccountDBRepository extends BaseDBRepository
 
             $result = $sth->fetch();
 
-            $result = new UserAccount($result["hive_id"], $result["nation_id"]
-                , $result["language_id"], $result["name"], $result["email"]);
+            if($result) {
+                return new UserAccount($result["hive_id"], $result["nation_id"]
+                    , $result["language_id"], $result["name"], $result["email"]);
+            } else {
+                throw new UserAccountNotExistsException();
+            }
         } catch (PDOException $exception) {
             throw new UserAccountDBException();
+        } catch (UserAccountNotExistsException $e) {
+            throw $e;
         }
-        return $result;
-    }
-
-    public function findUserByHiveId($hiveId): LoginUser
-    {
-        $query = "select u.user_id, a.nation_id, a.language_id, u.level, u.experience, u.gold, u.pearl, u.fatigue
-                from user_account a
-                join user u
-                on a.user_id = u.user_id
-                where a.hive_id = :hive_id;";
-
-        $user = null;
-        try {
-            $sth = $this->db->prepare($query);
-            $sth->bindParam(':hive_id', $hiveId);
-
-            $sth->execute();
-
-            $result = $sth->fetch();
-
-            $user = new LoginUser($result["user_id"], $result["nation_id"]
-                , $result["language_id"], $result["level"], $result["experience"]
-                , $result["gold"], $result["pearl"], $result["fatigue"]);
-        } catch(PDOException $exception) {
-            throw new UserAccountDBException();
-        }
-        return $user;
     }
 
     // PK인 hiveId로 접근함으로써 조회 속도를 높이고자 했습니다.
@@ -71,22 +51,19 @@ class UserAccountDBRepository extends BaseDBRepository
             if (password_verify($password, $encryptedPassword)) {
                 $result = true;
             }
+            return $result;
         } catch(PDOException $e) {
             throw new UserAccountDBException();
         }
-        return $result;
     }
 
     /**
      * @throws UserAccountDBException
      */
     public function isEmailExist($userEmail): int {
-
         $query = "select hive_id 
                 from user_account
                 where email = :user_email;";
-
-        $hiveId = 0;
 
         try {
             $sth = $this->db->prepare($query);
@@ -97,10 +74,11 @@ class UserAccountDBRepository extends BaseDBRepository
             $hiveId = $sth->fetch();
             if (!$hiveId) $hiveId = 0;
             else $hiveId = $hiveId["hive_id"];
+
+            return $hiveId;
         } catch(PDOException $exception) {
             throw new UserAccountDBException();
         }
-        return $hiveId;
     }
 
     public function createUserAccount($createUserAccount): UserAccount{
@@ -114,7 +92,6 @@ class UserAccountDBRepository extends BaseDBRepository
             ];
 
         $query = "insert into user_account(nation_id, language_id, name, email, password) values (:nation_id, :language_id, :name, :email, :password);";
-        $result = null;
         try {
             $this->db->beginTransaction();
 
@@ -124,10 +101,12 @@ class UserAccountDBRepository extends BaseDBRepository
             $this->db->commit();
 
             $result = $this->findUserAccountByHiveId($hiveId);
+            return $result;
         } catch (PDOException $exception) {
             $this->db->rollBack();
             throw new UserAccountDBException();
+        } catch (UrukException $e) {
+            throw $e;
         }
-        return $result;
     }
 }

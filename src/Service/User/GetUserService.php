@@ -2,6 +2,7 @@
 
 namespace App\Service\User;
 
+use App\Exception\Base\UrukException;
 use App\Exception\User\UserDBException;
 use App\Infrastructure\Persistence\User\UserDBRepository;
 
@@ -17,7 +18,7 @@ class GetUserService
         try {
             // 해당 유저가 없을 수도 있음
             return $this->userDBRepository->findByUserId($userId);
-        } catch(UserDBException $e) {
+        } catch(UrukException $e) {
             throw $e;
         }
     }

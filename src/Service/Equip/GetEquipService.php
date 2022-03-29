@@ -2,6 +2,7 @@
 
 namespace App\Service\Equip;
 
+use App\Exception\Base\UrukException;
 use App\Exception\Book\EquipNotExistsException;
 use App\Exception\Equip\EquipDBException;
 use App\Infrastructure\Persistence\Equip\EquipDBRepository;
@@ -17,7 +18,7 @@ class GetEquipService
     public function getPreparation($equipId) {
         try {
             return $this->equipDBRepository->findByEquipId($equipId);
-        } catch (EquipNotExistsException|EquipDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -25,7 +26,7 @@ class GetEquipService
     public function getRodName($preparationId) {
         try {
             return $this->equipDBRepository->findRodNameByPreparationId($preparationId);
-        } catch (EquipDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -33,7 +34,7 @@ class GetEquipService
     public function getLineName($preparationId) {
         try {
             return $this->equipDBRepository->findLineNameByPreparationId($preparationId);
-        } catch (EquipDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -41,7 +42,7 @@ class GetEquipService
     public function getReelName($preparationId) {
         try {
             return $this->equipDBRepository->findReelNameByPreparationId($preparationId);
-        } catch (EquipDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -49,7 +50,7 @@ class GetEquipService
     public function getHookName($preparationId) {
         try {
             return $this->equipDBRepository->findHookNameByPreparationId($preparationId);
-        } catch (EquipDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -57,7 +58,7 @@ class GetEquipService
     public function getBaitName($preparationId) {
         try {
             return $this->equipDBRepository->findBaitNameByPreparationId($preparationId);
-        } catch (EquipDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -65,7 +66,7 @@ class GetEquipService
     public function getSinkerName($preparationId) {
         try {
             return $this->equipDBRepository->findSinkerNameByPreparationId($preparationId);
-        } catch (EquipDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -73,7 +74,7 @@ class GetEquipService
     public function getRod($rodInfo) {
         try {
             return $this->equipDBRepository->findRodByPreparationId($rodInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -81,7 +82,7 @@ class GetEquipService
     public function getLine($lineInfo) {
         try {
             return $this->equipDBRepository->findLineByPreparationId($lineInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -89,7 +90,7 @@ class GetEquipService
     public function getReel($reelInfo) {
         try {
             return $this->equipDBRepository->findReelByPreparationId($reelInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -97,7 +98,7 @@ class GetEquipService
     public function getHook($hookInfo) {
         try {
             return $this->equipDBRepository->findHookByPreparationId($hookInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -105,7 +106,7 @@ class GetEquipService
     public function getBait($baitInfo) {
         try {
             return $this->equipDBRepository->findBaitByPreparationId($baitInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -113,7 +114,7 @@ class GetEquipService
     public function getSinker($sinkerInfo) {
         try {
             return $this->equipDBRepository->findSinkerByPreparationId($sinkerInfo);
-        } catch (EquipDBException|EquipNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }

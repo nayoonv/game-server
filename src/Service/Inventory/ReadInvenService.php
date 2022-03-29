@@ -2,8 +2,8 @@
 
 namespace App\Service\Inventory;
 
-use App\Exception\Inven\InvenDBException;
-use App\Exception\Inven\ItemNotExistsException;
+use App\Exception\Base\UrukException;
+
 use App\Infrastructure\Persistence\Inventory\InvenDBRepository;
 use App\Service\Equip\GetEquipService;
 use App\Util\Log;
@@ -26,7 +26,7 @@ class ReadInvenService
 
             Log::create_scribe_client('READ-INVEN', $userId." 인벤토리 열어보기 성공");
             return SuccessResponseManager::response($this->getList($inventoryFishList, $inventoryEquipList));
-        } catch (InvenDBException $e) {
+        } catch (UrukException $e) {
             return $e->response();
         }
     }
@@ -75,7 +75,7 @@ class ReadInvenService
     public function getInventoryItem($inventoryId)  {
         try {
             return $this->invenDBRepository->findUserEquipByInventoryId($inventoryId);
-        } catch (ItemNotExistsException|InvenDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }

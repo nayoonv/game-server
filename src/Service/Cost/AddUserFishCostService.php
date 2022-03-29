@@ -2,10 +2,8 @@
 
 namespace App\Service\Cost;
 
-use App\Exception\Auction\UserFishAuctionDBException;
+use App\Exception\Base\UrukException;
 use App\Exception\Fish\InvalidUserFishException;
-use App\Exception\Fish\UserFishDBException;
-use App\Exception\FishCost\UserFishCostDBException;
 use App\Infrastructure\Persistence\Cost\UserFishCostDBRepository;
 use App\Service\Auction\UpdateUserFishAuctionService;
 use App\Service\Fish\GetUserFishService;
@@ -58,7 +56,7 @@ class AddUserFishCostService
             $this->updateUserFishService->deleteUserFish($userFishId);
 
             return SuccessResponseManager::response($userFishInfo);
-        } catch (InvalidUserFishException|UserFishCostDBException|UserFishDBException|UserFishAuctionDBException $e) {
+        } catch (UrukException $e) {
             return $e->response();
         }
     }

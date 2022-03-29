@@ -3,8 +3,10 @@
 namespace App\Service\Fish;
 
 use App\Domain\Fishing\FishingFish;
+use App\Exception\Base\UrukException;
 use App\Exception\Fish\DeepDepthException;
 use App\Exception\Fish\FailToCatchFishException;
+use App\Exception\Fish\FishDBException;
 use App\Exception\Fish\InvenInsertFishException;
 use App\Exception\Fish\NotAppearFishException;
 use App\Exception\Fish\NotInsertUserFishException;
@@ -27,9 +29,10 @@ class AddUserFishService
     private ReadWeatherService $readWeatherService;
 
     public function __construct(FishDBRepository $fishDBRepository
-        , UserFishDBRepository $userFishDBRepository, GetMapService $getMapService
-        , InsertInvenService $insertInventoryService, GetUserCurrentEquipService $getUserCurrentEquipService
-        , ReadWeatherService $readWeatherService) {
+        , UserFishDBRepository                   $userFishDBRepository, GetMapService $getMapService
+        , InsertInvenService                     $insertInventoryService, GetUserCurrentEquipService $getUserCurrentEquipService
+        , ReadWeatherService                     $readWeatherService)
+    {
         $this->fishDBRepository = $fishDBRepository;
         $this->userFishDBRepository = $userFishDBRepository;
         $this->getMapService = $getMapService;
@@ -38,83 +41,77 @@ class AddUserFishService
         $this->readWeatherService = $readWeatherService;
     }
 
-    public function getUserFish($userId, $depth) {
-
-        // 물고기 잡기
+    public function getUserFish($userId, $depth)
+    {
         try {
+            // 물고기 잡기 (조건에 따라 물고기를 잡도록 구현하려고 하였으나, 어떤 경우에서든지 물고기를 잡을 수 있도록 구현하였습니다.)
             $userFish = $this->Fishing($userId, $depth);
-
+            // 물고기 잡아서 inven에 넣기
             $this->InsertInvenFish($userId, $userFish);
 
             return SuccessResponseManager::response($userFish);
-        } catch (DeepDepthException $e) {
-            return $e->exceptionResult();
-        } catch(NotInsertUserFishException $e) {
-            return $e->response();
-        } catch(FailToCatchFishException $e) {
-            return $e->exceptionResult();
-        } catch(NotAppearFishException $e) {
-            return $e->exceptionResult();
-        } catch(UserFishDBException $e) {
-            return $e->response();
-        } catch (InvenInsertFishException $e) {
+        } catch (UrukException $e) {
             return $e->exceptionResult();
         }
     }
-    public function InsertInvenFish($userId, $userFish) {
+
+    public function InsertInvenFish($userId, $userFish)
+    {
         date_default_timezone_set("Asia/Seoul");
         $datetime = date("Y-m-d H:i:s", time());
 
         try {
             $userFishId = $this->userFishDBRepository->insertUserFish($userId, $userFish->getFishId(), $userFish->getLength(), $userFish->getWeight(), $datetime);
             $this->insertInventoryService->insertInvenFish($userFishId, $userId, $datetime);
-        } catch(UserFishDBException $e) {
-            throw $e;
-        } catch(InvenInsertFishException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
-
-
     }
 
     /**
      * @throws NotAppearFishException
      * @throws FailToCatchFishException
-     * @throws DeepDepthException
+     * @throws DeepDepthException|UrukException
      */
-    public function Fishing($userId, $depth) {
-        // 사용자의 장비에 대한 정보를 가지고 와야한다.
-        $userCurrentEquipInfo = $this->getUserCurrentEquipService->getUserCurrentEquipInfo($userId);
+    public function Fishing($userId, $depth)
+    {
+        try {
+            // 사용자의 장비에 대한 정보를 가지고 와야한다.
+            $userCurrentEquipInfo = $this->getUserCurrentEquipService->getUserCurrentEquipInfo($userId);
 
-        // 사용자가 나간 바다에 대한 정보
-        $mapInfo = $this->getMapService->getUserFishingPlace($userId);
+            // 사용자가 나간 바다에 대한 정보
+            $mapInfo = $this->getMapService->getUserFishingPlace($userId);
 
-        if($mapInfo->getMaxDepth() < $depth) {
-            // 너무 깊이 던진 경우
-            throw new DeepDepthException();
+            if ($mapInfo->getMaxDepth() < $depth) {
+                // 너무 깊이 던진 경우
+                throw new DeepDepthException();
+            }
+            $appearance = $this->fishApperanceProbability($userId, $mapInfo, $userCurrentEquipInfo->getHook(), $depth);
+
+            if (!$appearance) {
+                // 물고기가 등장하지 않는 경우
+                throw new NotAppearFishException();
+            }
+            $gradeInfo = $this->fishGradeProbability($mapInfo, $depth, $userCurrentEquipInfo->getBait());
+
+            // 사용자가 내린 낚시대의 깊이
+            $fish = $this->chooseFish($depth, $mapInfo, $gradeInfo);
+
+            // 물고기들 중 한 마리를 잡는데, 낚싯대 type에 따라 연질대이면 hooking에, 경질대이면 success에 집중
+            // 실패할 수 있음
+            $result = $this->catchFish($fish, $userCurrentEquipInfo);
+
+            if (!$result) {
+                throw new FailToCatchFishException();
+            }
+            return $fish;
+        } catch (UrukException $e) {
+            throw $e;
         }
-        $appearance = $this->FishApperanceProbability($userId, $mapInfo, $userCurrentEquipInfo->getHook(), $depth);
-
-        if (!$appearance) {
-            // 물고기가 등장하지 않는 경우
-            throw new NotAppearFishException();
-        }
-        $gradeInfo = $this->FishGradeProbability($mapInfo, $depth, $userCurrentEquipInfo->getBait());
-
-        // 사용자가 내린 낚시대의 깊이
-        $fish = $this->ChooseFish($depth, $mapInfo, $gradeInfo);
-
-        // 물고기들 중 한 마리를 잡는데, 낚싯대 type에 따라 연질대이면 hooking에, 경질대이면 success에 집중
-        // 실패할 수 있음
-        $result = $this->CatchFish($fish, $userCurrentEquipInfo);
-
-        if (!$result) {
-            throw new FailToCatchFishException();
-        }
-        return $fish;
     }
 
-    public function CatchFish($fish, $equipInfo) {
+    public function catchFish($fish, $equipInfo)
+    {
         // 연질대인지, 경질대인지
         $rodInfo = $equipInfo->getRod();
         $lineInfo = $equipInfo->getLine();
@@ -142,21 +139,29 @@ class AddUserFishService
         return true;
     }
 
-    public function ChooseFish($depth, $mapInfo, $gradeInfo) {
-        $fishes = $this->fishDBRepository->findByMapIdAndDistance($depth, $mapInfo->getMapId(), $gradeInfo['grade']);
+    public function chooseFish($depth, $mapInfo, $gradeInfo)
+    {
+        try {
+            $fishes = $this->fishDBRepository->findByMapIdAndDistance($depth, $mapInfo->getMapId(), $gradeInfo['grade']);
 
-        $cases = count($fishes);
 
-        $fishNum = rand(0, $cases - 1);
+            $cases = count($fishes);
 
-        $fish = $fishes[$fishNum];
+            $fishNum = rand(0, $cases - 1);
 
-        $length = rand($fish->getMaxLength() * ($gradeInfo['gradeProbability'] / 100), $fish->getMaxLength());
-        $weight = rand($fish->getMaxWeight() * ($gradeInfo['gradeProbability'] / 100), $fish->getMaxWeight());
+            $fish = $fishes[$fishNum];
 
-        return new FishingFish($fish->getFishId(), $fish->getFishName(), $gradeInfo['grade'], $length, $weight);
+            $length = rand($fish->getMaxLength() * ($gradeInfo['gradeProbability'] / 100), $fish->getMaxLength());
+            $weight = rand($fish->getMaxWeight() * ($gradeInfo['gradeProbability'] / 100), $fish->getMaxWeight());
+
+            return new FishingFish($fish->getFishId(), $fish->getFishName(), $gradeInfo['grade'], $length, $weight);
+        } catch (FishDBException $e) {
+            throw $e;
+        }
     }
-    public function FishGradeProbability($mapInfo, $depth, $baitInfo) {
+
+    public function fishGradeProbability($mapInfo, $depth, $baitInfo)
+    {
         $gradeProbability = $baitInfo->getAdvancedAppearanceProbability();
         $deepProbability = 50;
         $gradeProbability += $deepProbability * ($depth / $mapInfo->getMaxDepth());
@@ -166,7 +171,8 @@ class AddUserFishService
         return ['grade' => $grade, 'gradeProbability' => $gradeProbability];
     }
 
-    public function FishApperanceProbability($userId, $mapInfo, $hookInfo, $depth) {
+    public function fishApperanceProbability($userId, $mapInfo, $hookInfo, $depth)
+    {
         $appearanceProbability = 30;
         $tideProbability = 30;
         $tidePeakProbability = 10;
@@ -201,7 +207,8 @@ class AddUserFishService
         return false;
     }
 
-    public function randomFunction($probability, $cases) {
+    public function randomFunction($probability, $cases)
+    {
         if ($probability > 10)
             return $cases;
         else if ($probability > 50)

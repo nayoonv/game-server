@@ -27,10 +27,10 @@ class BookPrizeDBRepository extends BaseDBRepository
             } else {
                 throw new BookPrizeNotExistsException();
             }
-        } catch(PDOException $exception) {
-            throw new BookPrizeDBException();
         } catch(BookPrizeNotExistsException $e) {
             throw $e;
+        } catch(PDOException $exception) {
+            throw new BookPrizeDBException();
         }
         return $result;
     }
@@ -54,10 +54,10 @@ class BookPrizeDBRepository extends BaseDBRepository
             } else {
                 throw new BookPrizeNotExistsBetweenCountException();
             }
-        } catch(PDOException $exception) {
-            throw new BookPrizeDBException();
         } catch(BookPrizeNotExistsBetweenCountException $e) {
             throw $e;
+        } catch(PDOException $exception) {
+            throw new BookPrizeDBException();
         }
         return $result;
     }

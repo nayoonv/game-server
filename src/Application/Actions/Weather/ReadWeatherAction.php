@@ -17,7 +17,7 @@ class ReadWeatherAction
     public function __invoke(Request $request, Response $response): Response {
         $userId = $request->getParsedBody()['user_id'];
 
-        $weatherInfo = $this->readWeatherService->getWeatherInfo($userId);
+        $weatherInfo = $this->readWeatherService->getWeather($userId);
 
         $response->getBody()->write(json_encode($weatherInfo));
 

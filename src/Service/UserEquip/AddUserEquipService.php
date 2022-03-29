@@ -2,6 +2,7 @@
 
 namespace App\Service\UserEquip;
 
+use App\Exception\Base\UrukException;
 use App\Exception\Book\EquipNotExistsException;
 use App\Exception\Equip\EquipDBException;
 use App\Exception\Equip\UserEquipDBException;
@@ -29,7 +30,7 @@ class AddUserEquipService
                 case 3:
                     return $this->userEquipDBRepository->insertReel($userId, $equipId, $level, $preparationId);
             }
-        } catch(EquipNotExistsException|EquipDBException|UserEquipDBException $e) {
+        } catch(UrukException $e) {
             throw $e;
         }
     }
@@ -37,7 +38,7 @@ class AddUserEquipService
     public function addEquipUpgradeUnavailable($userId, $equipId) {
         try {
             return $this->userEquipDBRepository->insertEquipUpgradeUnavailable($userId, $equipId);
-        } catch (UserEquipDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }

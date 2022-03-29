@@ -2,6 +2,7 @@
 
 namespace App\Service\Auction;
 
+use App\Exception\Base\UrukException;
 use App\Infrastructure\Persistence\Auction\UserFishAuctionDBRepository;
 use App\Util\SuccessResponseManager;
 
@@ -17,7 +18,7 @@ class ReadUserFishAuctionService
         try {
             $result = $this->userFishAuctionDBRepository->findByUserId($userId);
             return SuccessResponseManager::response($result);
-        } catch(UserFishAuctionDBException $e) {
+        } catch(UrukException $e) {
             return $e->response();
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Service\Book;
 
 use App\Domain\UserGiftBox\RequestUserGiftBox;
+use App\Exception\Base\UrukException;
 use App\Exception\Book\BookPrizeDBException;
 use App\Exception\Book\BookPrizeNotExistsException;
 use App\Infrastructure\Persistence\Book\UserBookPrizeDBRepository;
@@ -51,7 +52,7 @@ class UpdateUserBookPrizeService
                 }
             }
             return false;
-        } catch (BookPrizeDBException|BookPrizeNotExistsException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }

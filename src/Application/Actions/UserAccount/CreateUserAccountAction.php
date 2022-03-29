@@ -17,6 +17,7 @@ class CreateUserAccountAction
 
     public function __invoke(Request $request, Response $response): Response {
         $body= $request->getParsedBody();
+        // 회원가입 Service로 이동
         $result = $this->signUpUserAccountService->createUserAccount(new CreateUserAccount(
             $body['nation_id'], $body['language_id'], $body['name']
             , $body['email'], $body['password']));

@@ -1,33 +1,35 @@
-drop database uruk;
-create database uruk;
-use uruk;
-
 create table user_account (
 	hive_id bigint auto_increment primary key,
     nation_id int not null,
     language_id int not null,
-    user_id int not null
+    name varchar(20) not null,
+    email varchar(30) not null unique key,
+    password varchar(100) not null
 );
 
-# hive_id로 회원가입할 때, user 테이블의 마지막 column 값 + 1로 user_id를 만들려고 했는데, 동시 접근 시 같은 user_id가 생성되면 어떡하지..?
-# 아, 음.. 어.. user에 insert해서 나온 user_id를 가지고 오는 식으로 진행하자..!
-# user에 insert를 하면서 user_boat에 생성
+create table user_account_user (
+	hive_id bigint,
+    user_id int,
+    primary key (hive_id, user_id)
+);
 
 create table user (
 	user_id int auto_increment primary key,
     level int not null default 1,
-    experience int not null default 200,
+    experience int not null default 20000,
     gold int not null default 0,
     pearl int not null default 0,
     fatigue int not null default 0
 );
 
 create table user_gift_box (
+	user_gift_box_id int not null primary key,
 	user_id int not null,
-    item_id int not null,
-    received_date DATETIME not null,
-    received tinyint not null default 0,
-    primary key(user_id, item_id, received_date)
+    gift_type_id int not null,
+    gift_id int not null,
+    count int not null,
+    received_date DATETIME not null default now(),
+    received tinyint not null default 0
 );
 
 create table user_boat (
@@ -57,6 +59,9 @@ create table user_weather (
     temperature int not null,
     wind_direction_id int not null,
     wind_speed int not null,
+    tide_time datetime not null,
+    tide_type int not null,
+    tide_power int not null,
     primary key (user_id, time)
 );
 
@@ -85,20 +90,51 @@ create table inventory_type (
     inventory_type_name varchar(10) not null
 );
 
-create table user_item (
-	user_item_id int not null primary key,
+create table user_equip (
+	user_equip_id int not null primary key,
     user_id int not null,
-    item_id int not null,
-    upgrade_available tinyint not null,
-    level int,
-    durability int
+    equip_id int not null,
+    upgrade_available tinyint not null
+);
+
+create table user_upgrade_equip (
+	user_equip_id int not null primary key,
+    level int not null,
+    value_for_level_up int not null default 0,
+    durability int not null
 );
 
 create table user_fish (
-	user_fish_id int not null primary key,
+    user_fish_id int not null primary key auto_increment,
     user_id int not null,
     fish_id int not null,
-    freshness int not null default 3
+    freshness int not null default 3,
+    catch_date datetime not null,
+    length int not null,
+    weight int not null,
+    before_cal tinyint default 0
+);
+
+create table user_current_equip (
+	user_id  int not null primary key,
+    user_rod_id int,
+    user_line_id int,
+    user_reel_id int,
+    user_hook_id int,
+    user_bait_id int,
+    user_sinker_id int
+);
+
+create table user_fishing_place (
+	user_id int not null primary key,
+    map_id int not null,
+    access_time datetime not null
+);
+
+create table user_book_prize (
+	user_id int not null primary key,
+    book_prize_id int not null,
+    get_date datetime not null
 );
 
 create table fish (
@@ -144,16 +180,17 @@ create table tide (
     primary key (tide_date, tide_time)
 );
 
-create table item_map (
+create table equip_map (
     map_id int not null,
-    item_id int not null,
-    primary key (map_id, item_id)
+    equip_id int not null,
+    primary key (map_id, equip_id)
 );
 
 create table user_level (
     level int not null primary key,
     experience int not null,
-    fatigue int not null
+    fatigue int not null,
+    advantage int not null
 );
 
 create table nation (
@@ -177,20 +214,34 @@ create table asset (
     asset_name varchar(3) not null
 );
 
-create table store (
-    store_id int not null primary key,
-    item_id int not null,
+create table book_prize (
+	book_prize_id int not null primary key,
+    fish_count int not null,
     asset_id int not null,
     cost int not null
 );
 
+create table gift_type (
+	gift_type_id int not null primary key,
+    gift_type_name varchar(10) not null
+);
+
+create table store (
+    store_id int not null primary key auto_increment,
+    goods_id int not null,
+    goods_type_id int not null,
+    asset_id int not null,
+    cost int not null,
+    unique key (goods_id, goods_type_id)
+);
+
 create table preparation_type (
-    preparation_type_id int not null auto_increment primary key,
+    preparation_type_id int not null primary key,
     preparation_type_name varchar(20) not null
 );
 
-create table item (
-    item_id int not null auto_increment primary key,
+create table equip (
+    equip_id int not null auto_increment primary key,
     preparation_id int not null,
     preparation_type_id int not null,
     unique key (preparation_id, preparation_type_id)
@@ -291,4 +342,16 @@ create table sinker (
 	sinker_id int not null primary key,
     sinker_name varchar(20) not null,
     sinker_weight int not null
+);
+
+create table tool (
+	tool_id int not null primary key,
+    tool_name varchar(20) not null,
+    increased_durability int not null
+);
+
+create table fuel (
+	fuel_id int not null primary key,
+    fuel_name varchar(20) not null,
+    increased_fuel int not null
 );

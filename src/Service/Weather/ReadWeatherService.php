@@ -3,11 +3,13 @@
 namespace App\Service\Weather;
 
 use App\Domain\Weather\Weather;
+use App\Exception\Base\UrukException;
 use App\Exception\Weather\NotReadWeatherException;
 use App\Exception\Weather\TideDBException;
 use App\Exception\Weather\WeatherDBException;
 use App\Infrastructure\Persistence\Weather\TideDBRepository;
 use App\Infrastructure\Persistence\Weather\WeatherDBRepository;
+use App\Util\SuccessResponseManager;
 
 class ReadWeatherService
 {
@@ -17,6 +19,13 @@ class ReadWeatherService
     public function __construct(WeatherDBRepository $weatherDBRepository,TideDBRepository $tideDBRepository) {
         $this->weatherDBRepository = $weatherDBRepository;
         $this->tideDBRepository = $tideDBRepository;
+    }
+    public function getWeather($userId) {
+        try {
+            return SuccessResponseManager::response($this->getWeatherInfo($userId));
+        } catch (UrukException $e) {
+            return $e->response();
+        }
     }
 
     public function getWeatherInfo($userId) {
@@ -37,12 +46,8 @@ class ReadWeatherService
                 throw new NotReadWeatherException;
 
             return $result;
-        } catch (TideDBException $e) {
-            return $e->response();
-        } catch (NotReadWeatherException $e) {
-            return $e->response();
-        } catch (WeatherDBException $e) {
-            return $e->response();
+        } catch (UrukException $e) {
+            throw $e;
         }
     }
 
@@ -58,7 +63,7 @@ class ReadWeatherService
         try {
             $tideInfo = $this->tideDBRepository->findTideByDateAndTime($date, $time);
             return new Weather($datetime, $temperature, $windDirectionId, $windSpeed, $tideInfo->getTideTime(), $tideInfo->getTideType(), $tideInfo->getTidePower());
-        } catch (TideDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }

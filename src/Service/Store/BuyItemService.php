@@ -2,6 +2,7 @@
 
 namespace App\Service\Store;
 
+use App\Exception\Base\UrukException;
 use App\Exception\Login\UserAccountUserDBException;
 use App\Exception\Store\GoodsNotExistsException;
 use App\Exception\Store\InvenInsertEquipException;
@@ -92,8 +93,7 @@ class BuyItemService
                 throw new UserAssetNotEnoughException();
             }
             // 그렇지 않으면 Exception을 출력한다.
-        } catch (StoreDBException|GoodsNotExistsException|UserAssetNotEnoughException|InvenInsertEquipException
-        |UserDBException|UserAccountUserDBException|UserEquipInsertException $e) {
+        } catch (UrukException $e) {
             return $e->response();
         }
     }

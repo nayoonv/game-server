@@ -2,6 +2,7 @@
 
 namespace App\Service\UserEquip;
 
+use App\Exception\Base\UrukException;
 use App\Exception\Equip\UserEquipDBException;
 use App\Infrastructure\Persistence\Equip\UserEquipDBRepository;
 
@@ -17,7 +18,7 @@ class GetUserEquipService
     public function getUserEquip($userEquipId) {
         try {
             return $this->userEquipDBRepository->findEquipByUserEquipId($userEquipId);
-        } catch (UserEquipDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
@@ -26,7 +27,7 @@ class GetUserEquipService
     {
         try {
             return $this->userEquipDBRepository->findUpgradeAvailableEquipByUserEquipId($userEquipId);
-        } catch (UserEquipDBException $exception) {
+        } catch (UrukException $exception) {
             throw $exception;
         }
     }
@@ -35,7 +36,7 @@ class GetUserEquipService
     {
         try {
             return $this->userEquipDBRepository->findUpgradeUnavailableEquipByUserEquipId($userEquipId);
-        } catch (UserEquipDBException $exception) {
+        } catch (UrukException $exception) {
             throw $exception;
         }
     }

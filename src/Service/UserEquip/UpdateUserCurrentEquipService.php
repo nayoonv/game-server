@@ -2,6 +2,7 @@
 
 namespace App\Service\UserEquip;
 
+use App\Exception\Base\UrukException;
 use App\Exception\Equip\UserEquipDBException;
 use App\Exception\Inven\InvalidEquipException;
 use App\Exception\Inven\InvenDBException;
@@ -61,60 +62,68 @@ class UpdateUserCurrentEquipService
                 , 'before_user_equip_id' => $beforeEquipId, 'changed_user_equip_id' => $updatedEquipId]);
 
             return SuccessResponseManager::response($updatedEquip);
-        } catch (ItemNotExistsException|InvenDBException|InvalidEquipException|UserEquipDBException|UserAccountUserDBException $e) {
+        } catch (UrukException $e) {
             return $e->response();
         }
     }
     public function getUserEquipId($equip, $userId) {
-        $currentEquip = $this->getUserCurrentEquipService->getByUserId($userId);
-        $preparationType = $equip->getPreparationTypeId();
+        try {
+            $currentEquip = $this->getUserCurrentEquipService->getByUserId($userId);
+            $preparationType = $equip->getPreparationTypeId();
 
-        $currentEquipId = 0;
-        switch($preparationType) {
-            case 1:
-                $currentEquipId = $currentEquip->getUserRodId();
-                break;
-            case 2:
-                $currentEquipId = $currentEquip->getUserLineId();
-                break;
-            case 3:
-                $currentEquipId = $currentEquip->getUserReelId();
-                break;
-            case 4:
-                $currentEquipId = $currentEquip->getUserHookId();
-                break;
-            case 5:
-                $currentEquipId = $currentEquip->getUserBaitId();
-                break;
-            case 6:
-                $currentEquipId = $currentEquip->getUserSinkerId();
-                break;
+            $currentEquipId = 0;
+            switch ($preparationType) {
+                case 1:
+                    $currentEquipId = $currentEquip->getUserRodId();
+                    break;
+                case 2:
+                    $currentEquipId = $currentEquip->getUserLineId();
+                    break;
+                case 3:
+                    $currentEquipId = $currentEquip->getUserReelId();
+                    break;
+                case 4:
+                    $currentEquipId = $currentEquip->getUserHookId();
+                    break;
+                case 5:
+                    $currentEquipId = $currentEquip->getUserBaitId();
+                    break;
+                case 6:
+                    $currentEquipId = $currentEquip->getUserSinkerId();
+                    break;
+            }
+            return $currentEquipId;
+        } catch (UrukException $e) {
+            throw $e;
         }
-        return $currentEquipId;
     }
 
     public function updateByPreparationType($equip, $userEquipId, $userId) {
-        $preparationType = $equip->getPreparationTypeId();
+        try {
+            $preparationType = $equip->getPreparationTypeId();
 
-        switch($preparationType) {
-            case 1:
-                $this->userCurrentEquipDBRepository->updateRodByUserEquipId($userId, $userEquipId);
-                break;
-            case 2:
-                $this->userCurrentEquipDBRepository->updateLineByUserEquipId($userId, $userEquipId);
-                break;
-            case 3:
-                $this->userCurrentEquipDBRepository->updateReelByUserEquipId($userId, $userEquipId);
-                break;
-            case 4:
-                $this->userCurrentEquipDBRepository->updateHookByUserEquipId($userId, $userEquipId);
-                break;
-            case 5:
-                $this->userCurrentEquipDBRepository->updateBaitByUserEquipId($userId, $userEquipId);
-                break;
-            case 6:
-                $this->userCurrentEquipDBRepository->updateSinkerByUserEquipId($userId, $userEquipId);
-                break;
+            switch ($preparationType) {
+                case 1:
+                    $this->userCurrentEquipDBRepository->updateRodByUserEquipId($userId, $userEquipId);
+                    break;
+                case 2:
+                    $this->userCurrentEquipDBRepository->updateLineByUserEquipId($userId, $userEquipId);
+                    break;
+                case 3:
+                    $this->userCurrentEquipDBRepository->updateReelByUserEquipId($userId, $userEquipId);
+                    break;
+                case 4:
+                    $this->userCurrentEquipDBRepository->updateHookByUserEquipId($userId, $userEquipId);
+                    break;
+                case 5:
+                    $this->userCurrentEquipDBRepository->updateBaitByUserEquipId($userId, $userEquipId);
+                    break;
+                case 6:
+                    $this->userCurrentEquipDBRepository->updateSinkerByUserEquipId($userId, $userEquipId);
+                    break;
+            }
+        } catch (UrukException $e) {
+            throw $e;
         }
     }
 }

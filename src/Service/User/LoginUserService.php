@@ -3,10 +3,7 @@
 namespace App\Service\User;
 
 use App\Domain\User\User;
-use App\Exception\Boat\NotCreateUserBoatException;
-use App\Exception\Login\UserAccountUserDBException;
-use App\Exception\Map\UserMapDBException;
-use App\Exception\User\UserDBException;
+use App\Exception\Base\UrukException;
 use App\Infrastructure\Persistence\User\UserDBRepository;
 use App\Service\Boat\CreateBoatService;
 use App\Service\Map\CreateUserMapService;
@@ -27,6 +24,7 @@ class LoginUserService
         $this->loginUserAccountUserService = $loginUserAccountUserService;
     }
 
+    // 게임 내 사용자 찾기
     public function findUser($hiveId): User {
         try {
             $userId = $this->loginUserAccountUserService->getUser($hiveId);
@@ -38,19 +36,22 @@ class LoginUserService
 
             return $this->userDBRepository->findByUserId($userId);
 
-        } catch (UserAccountUserDBException|UserMapDBException|NotCreateUserBoatException|UserDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
 
+    // 게임 내 사용자 생성
     public function createUser($hiveId): int {
         try {
             return $this->userDBRepository->createUser($hiveId);
-        } catch (UserDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }
 
+    // 게임 데이터 초기화
+    // user boat 추가, 사용자 낚시 시작 지역을 map_id = 1로 설정
     public function initGameData($userId) {
         try {
             // 기본 item inventory에 추가하기
@@ -58,7 +59,7 @@ class LoginUserService
             $this->createBoatService->createUserBoat($userId);
             // user_fishing_place에 mapId 1로 지정하기
             $this->createUserMapService->createUserMap($userId);
-        } catch (NotCreateUserBoatException|UserMapDBException $e) {
+        } catch (UrukException $e) {
             throw $e;
         }
     }

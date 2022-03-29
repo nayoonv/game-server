@@ -2,7 +2,7 @@
 
 namespace App\Service\UserAccountUser;
 
-use App\Exception\Login\UserAccountUserDBException;
+use App\Exception\Base\UrukException;
 use App\Infrastructure\Persistence\UserAccountUser\UserAccountUserDBRepository;
 
 class LoginUserAccountUserService
@@ -15,10 +15,9 @@ class LoginUserAccountUserService
 
     public function getUser($hiveId): int {
         try {
-            $userId = $this->userAccountUserDBRepository->findUserIdByHiveId($hiveId);
-        } catch (UserAccountUserDBException $e) {
+            return $this->userAccountUserDBRepository->findUserIdByHiveId($hiveId);
+        } catch (UrukException $e) {
             throw $e;
         }
-        return $userId;
     }
 }

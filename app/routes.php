@@ -74,9 +74,6 @@ return function (App $app) {
         // 도감 보여주기
         $group->post('/read-user-book', ReadUserBookAction::class);
 
-        // 정산
-        $group->post('/update-user-fish-before-cal', UpdateUserFishBeforeCalAction::class);
-
         // 선물함
         $group->post('/read-user-gift-box', ReadUserGiftBoxAction::class);
         $group->post('/update-user-gift-box-received', UpdateUserGiftBoxReceivedAction::class);

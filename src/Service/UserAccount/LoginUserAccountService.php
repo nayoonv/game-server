@@ -2,6 +2,7 @@
 
 namespace App\Service\UserAccount;
 
+use App\Exception\Base\UrukException;
 use App\Exception\Boat\NotCreateUserBoatException;
 use App\Exception\Login\InvalidEmailException;
 use App\Exception\Login\InvalidPasswordException;
@@ -27,15 +28,19 @@ class LoginUserAccountService
 
     public function login($email, $password) {
         try {
+            // 올바른 이메일인지 확인
             $hiveId = $this->userAccountRepository->isEmailExist($email);
             if ($hiveId == 0) {
                 throw new InvalidEmailException;
             }
+            // 올바른 비밀번호인지 확인
             if ($this->userAccountRepository->validatePasswordByHiveId($hiveId, $password))
                 throw new InvalidPasswordException;
 
+            // 사용자의 게임 데이터 가지고 오기
             $user = $this->loginUserService->findUser($hiveId);
 
+            // token 발행
             $token = JWTManager::getInstance()->getToken($user->getUserId());
             $result = [
                 "user"=>$user,
@@ -46,8 +51,7 @@ class LoginUserAccountService
             Log::write('LOGIN', ['hive_id' => $hiveId, 'user_id' => $user->getUserId()]);
 
             return $result;
-        } catch (InvalidEmailException|InvalidPasswordException|UserAccountUserDBException|UserMapDBException
-                    |NotCreateUserBoatException|UserDBException|UserAccountDBException $e) {
+        } catch (UrukException $e) {
             return $e->response();
         }
     }

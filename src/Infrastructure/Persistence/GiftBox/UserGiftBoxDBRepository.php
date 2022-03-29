@@ -4,6 +4,7 @@ namespace App\Infrastructure\Persistence\GiftBox;
 
 use App\Domain\UserGiftBox\UserGiftBox;
 use App\Exception\GiftBox\UserGiftBoxDBException;
+use PDOException;
 
 class UserGiftBoxDBRepository
 {
@@ -23,8 +24,8 @@ class UserGiftBoxDBRepository
             $sth->execute($data);
 
             $this->db->commit();
-        } catch(UserGiftBoxDBException $exception) {
-
+        } catch(PDOException $exception) {
+            throw new UserGiftBoxDBException();
         }
     }
 
@@ -45,8 +46,8 @@ class UserGiftBoxDBRepository
                     , $box['gift_type_id'], $box['gift_id'], $box['count'], $box['received_date'], $box['received']));
             }
         }
-        } catch(UserGiftBoxDBException $exception) {
-
+        } catch(PDOException $exception) {
+            throw new UserGiftBoxDBException();
         }
         return $result;
     }
@@ -62,8 +63,8 @@ class UserGiftBoxDBRepository
             $sth->execute();
 
             $this->db->commit();
-        } catch(UserGiftBoxDBException $exception) {
-
+        }  catch(PDOException $exception) {
+            throw new UserGiftBoxDBException();
         }
     }
 
