@@ -19,7 +19,6 @@ class LoginUserAccountAction
         $email = $body['email'];
         $password = $body['password'];
         $result = $this->loginUserAccountService->login($email, $password);
-
         $response->getBody()->write(json_encode($result));
         return $response;
     }
