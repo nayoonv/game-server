@@ -2,7 +2,7 @@
 
 namespace App\Exception\GiftBox;
 
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class UserGiftBoxDBException extends UrukException
 {

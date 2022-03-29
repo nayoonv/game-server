@@ -2,7 +2,7 @@
 
 namespace App\Exception\Weather;
 
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class TideDBException extends UrukException
 {

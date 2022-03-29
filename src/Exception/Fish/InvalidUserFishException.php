@@ -2,7 +2,7 @@
 
 namespace App\Exception\Fish;
 
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class InvalidUserFishException extends UrukException
 {

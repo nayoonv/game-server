@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Exception\FishCost;
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class UserFishCostDBException extends UrukException
 {

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Exception\Store;
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class UserEquipInsertException extends UrukException
 {

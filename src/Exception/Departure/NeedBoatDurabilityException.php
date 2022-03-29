@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Exception\Departure;
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class NeedBoatDurabilityException extends UrukException
 {

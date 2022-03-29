@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Exception\Inven;
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class ItemNotExistsException extends UrukException
 {

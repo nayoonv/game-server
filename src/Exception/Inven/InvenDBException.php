@@ -2,7 +2,7 @@
 
 namespace App\Exception\Inven;
 
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class InvenDBException extends UrukException
 {

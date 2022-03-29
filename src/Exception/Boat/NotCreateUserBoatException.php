@@ -3,7 +3,7 @@
 namespace App\Exception\Boat;
 
 
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class NotCreateUserBoatException extends UrukException
 {

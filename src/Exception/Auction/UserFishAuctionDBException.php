@@ -2,7 +2,7 @@
 
 namespace App\Exception\Auction;
 
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class UserFishAuctionDBException extends UrukException
 {

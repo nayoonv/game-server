@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Exception\Equip;
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class UserCurrentEquipDBException extends UrukException
 {

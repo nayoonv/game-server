@@ -2,7 +2,7 @@
 
 namespace App\Exception\Login;
 
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class InvalidPasswordException extends UrukException
 {

@@ -2,7 +2,7 @@
 
 namespace App\Exception\Departure;
 
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class NeedUserFatigueException extends UrukException
 {

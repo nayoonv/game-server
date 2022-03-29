@@ -2,7 +2,7 @@
 
 namespace App\Exception\Equip;
 
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class UserCurrentEquipNotExistsException extends UrukException
 {

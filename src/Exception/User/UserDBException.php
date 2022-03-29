@@ -2,7 +2,7 @@
 
 namespace App\Exception\User;
 
-use App\Exception\UrukException;
+use App\Exception\Base\UrukException;
 
 class UserDBException extends UrukException
 {
