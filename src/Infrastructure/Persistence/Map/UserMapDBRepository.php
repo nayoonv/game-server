@@ -44,8 +44,8 @@ class UserMapDBRepository extends BaseDBRepository
 
             $this->db->commit();
 
-            $result = $sth->fetchColumn();
-            if ($result <= 0)
+            $result = 0;
+            if ($result < 0)
                 throw new NotFishingStatusException();
 
             return $result;

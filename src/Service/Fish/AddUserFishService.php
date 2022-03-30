@@ -51,7 +51,7 @@ class AddUserFishService
 
             return SuccessResponseManager::response($userFish);
         } catch (UrukException $e) {
-            return $e->exceptionResult();
+            return $e->response();
         }
     }
 

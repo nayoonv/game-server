@@ -24,14 +24,14 @@ class UpdateUserFishService
         try {
             $userBookFishList = $this->getUserFishService->getUserFishNotInUserBook($userId);
 
-            if (count($userBookFishList) != 0) {
+            if ($userBookFishList != -1 && count($userBookFishList) != 0) {
                 $userBookFishIdList = array();
                 foreach($userBookFishList as &$fish)
                     array_push($userBookFishIdList, ['fish_id' => $fish->getFishId(), 'catch_date' => $fish->getCatchDate()]);
                 $this->updateUserBookService->addFish($userId, $userBookFishIdList);
                 $this->userFishDBRepository->updateBeforeCalChecked($userId);
             } else {
-                throw new UserBookNotExistsException();
+                return [];
             }
             return $userBookFishList;
         } catch (UrukException $e) {

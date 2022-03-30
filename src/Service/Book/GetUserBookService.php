@@ -4,6 +4,7 @@ namespace App\Service\Book;
 
 use App\Exception\Base\UrukException;
 use App\Infrastructure\Persistence\Book\UserBookDBRepository;
+use App\Util\SuccessResponseManager;
 
 class GetUserBookService
 {
@@ -22,7 +23,7 @@ class GetUserBookService
 
             $result = ['user_book_fish_list' => $userBookFishList];
 
-            return $result;
+            return SuccessResponseManager::response($result);
         } catch (UrukException $e) {
             throw $e;
         }

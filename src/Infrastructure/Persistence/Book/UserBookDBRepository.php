@@ -44,7 +44,7 @@ class UserBookDBRepository extends BaseDBRepository
     }
 
     public function findByUserId($userId) {
-        $query = "select * from user_book b where b.user_id = :user_id)";
+        $query = "select * from user_book b where b.user_id = :user_id";
 
         $result = array();
         try {

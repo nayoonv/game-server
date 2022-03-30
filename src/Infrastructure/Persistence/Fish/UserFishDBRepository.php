@@ -103,6 +103,8 @@ class UserFishDBRepository extends BaseDBRepository
                     $userFish->setCatchDate($fish['catch_date']);
                     array_push($result, $userFish);
                 }
+            } else {
+                $result = -1;
             }
         } catch(PDOException $exception) {
             throw new UserFishDBException();
