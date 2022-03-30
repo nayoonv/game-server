@@ -3,7 +3,6 @@
 namespace App\Application\Actions\Common;
 
 use App\Application\Actions\Action;
-use App\Domain\DomainException\DomainRecordNotFoundException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\Twig;
 

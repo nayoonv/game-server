@@ -14,3 +14,4 @@ class CommonDBRepository extends BaseDBRepository
         $sth->execute();
     }
 }
+

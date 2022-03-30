@@ -107,6 +107,7 @@ function createAssetLogTable($pdo, $today)
                 `user_id` int(11) not null,
                 `goods_id` int(11) not null,
                 `asset_id` int(11) not null,
+                `cost` int(11) not null,
                 `server_ip` varchar(32) not null,
                 `client_ip` varchar(32) not null,
                 primary key (`log_id`)

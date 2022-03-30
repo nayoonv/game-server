@@ -3,7 +3,7 @@
 namespace App\Service\Common;
 
 use App\Infrastructure\Persistence\Common\CommonDBRepository;
-use PhpOffice\PhpSpreadsheet\Reader\Csv as Csv;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use function App\Service\count;
 
 class UploadFileService
@@ -36,16 +36,6 @@ class UploadFileService
 
                 $spreadsheet = $reader->load($directory);
                 $spreadData = $spreadsheet->getActiveSheet()->toArray();
-
-//                $rows = count($spreadData);
-//                $cols = (count($spreadData, 1) / count($spreadData)) - 1;
-//
-//                for ($i = 0; $i < $rows; $i++) {
-//                    for ($j = 0; $j < $cols; $j++) {
-//                        $response = $response . $spreadData[$i][$j] . ' ';
-//                    }
-//                    $response = $response . '<br/>';
-//                }
 
                 // connecting db
                 $this->commonRepository->loadData($directory, $tableName);

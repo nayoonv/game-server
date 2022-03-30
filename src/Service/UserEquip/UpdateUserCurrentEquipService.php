@@ -59,7 +59,7 @@ class UpdateUserCurrentEquipService
             $hiveId = $this->getUserAccountUserService->getHiveId($userId);
 
             Log::write('ITEM_CHANGE', ['hive_id' => $hiveId, 'user_id' => $userId
-                , 'before_user_equip_id' => $beforeEquipId, 'changed_user_equip_id' => $updatedEquipId]);
+                , 'before_user_equip_id' => $beforeEquipId, 'current_user_equip_id' => $updatedEquipId]);
 
             return SuccessResponseManager::response($updatedEquip);
         } catch (UrukException $e) {
