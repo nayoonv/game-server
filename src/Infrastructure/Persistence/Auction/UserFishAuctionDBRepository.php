@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\Auction;
 
 use App\Domain\Auction\UserFishAuction;
+use App\Exception\Auction\AuctionNotExistsException;
 use App\Exception\Auction\UserFishAuctionDBException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use PDOException;
@@ -63,6 +64,30 @@ class UserFishAuctionDBRepository extends BaseDBRepository
                 $result = new UserFishAuction($result['user_id'], $result['gold'], $result['sell_date']);
 
             return $result;
+        } catch(PDOException $exception) {
+            throw new UserFishAuctionDBException();
+        }
+    }
+
+    public function findAll() {
+        $query = "select * from user_fish_auction order by gold desc";
+
+        try {
+            $sth = $this->db->prepare($query);
+
+            $sth->execute();
+
+            $auctions = $sth->fetchAll();
+
+            if($auctions) {
+                $result = array();
+                foreach($auctions as &$auction) {
+                 array_push($result, new UserFishAuction($auction['user_id'], $auction['gold'], $auction['sell_date']));
+                }
+                return $result;
+            } else {
+                throw new AuctionNotExistsException();
+            }
         } catch(PDOException $exception) {
             throw new UserFishAuctionDBException();
         }

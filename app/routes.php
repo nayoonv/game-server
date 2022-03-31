@@ -21,6 +21,7 @@ use App\Application\Actions\UserEquip\ReadUserCurrentEquipAction;
 use App\Application\Actions\UserEquip\UpdateUserCurrentEquipAction;
 use App\Application\Actions\Weather\ReadWeatherAction;
 use App\Application\Actions\Store\BuyItemAction;
+use App\Application\Actions\Auction\ReadAllFishAuction;
 
 use App\Application\Middleware\JwtAuthentication;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -70,6 +71,8 @@ return function (App $app) {
         // 경매 성공
         $group->post('/add-user-fish-cost', AddUserFishCostAction::class);
         $group->post('/read-user-fish-auction', ReadUserFishAuction::class);
+        $group->post('/read-all-fish-auction', ReadAllFishAuction::class);
+
         // 도감 보여주기
         $group->post('/read-user-book', ReadUserBookAction::class);
 

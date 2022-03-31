@@ -22,4 +22,13 @@ class ReadUserFishAuctionService
             return $e->response();
         }
     }
+
+    public function readAllAuction() {
+        try {
+            $result = $this->userFishAuctionDBRepository->findAll();
+            return SuccessResponseManager::response($result);
+        } catch(UrukException $e) {
+            return $e->response();
+        }
+    }
 }
