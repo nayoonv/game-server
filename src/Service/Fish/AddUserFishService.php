@@ -9,6 +9,7 @@ use App\Exception\Fish\FailToCatchFishException;
 use App\Exception\Fish\FishDBException;
 use App\Exception\Fish\InvenInsertFishException;
 use App\Exception\Fish\NotAppearFishException;
+use App\Exception\Fish\NotFishingStatusException;
 use App\Exception\Fish\NotInsertUserFishException;
 use App\Exception\Fish\UserFishDBException;
 use App\Infrastructure\Persistence\Fish\FishDBRepository;
@@ -82,6 +83,9 @@ class AddUserFishService
             // 사용자가 나간 바다에 대한 정보
             $mapInfo = $this->getMapService->getUserFishingPlace($userId);
 
+            if ($mapInfo->getFishing() != 1)
+                throw new NotFishingStatusException();
+
             if ($mapInfo->getMaxDepth() < $depth) {
                 // 너무 깊이 던진 경우
                 throw new DeepDepthException();
@@ -133,9 +137,9 @@ class AddUserFishService
             $result = $this->randomFunction($successProbability, $cases);
         }
 
-//        if ($result == 1) {
-//            return false;
-//        }
+        if ($result == 1) {
+            return false;
+        }
         return true;
     }
 
@@ -165,7 +169,7 @@ class AddUserFishService
         $gradeProbability = $baitInfo->getAdvancedAppearanceProbability();
         $deepProbability = 50;
         $gradeProbability += $deepProbability * ($depth / $mapInfo->getMaxDepth());
-        $cases = 3;
+        $cases = 3; // 3개의 등급
 
         $grade = $this->randomFunction($gradeProbability, $cases);
         return ['grade' => $grade, 'gradeProbability' => $gradeProbability];
@@ -191,15 +195,18 @@ class AddUserFishService
          * 최대 30까지 확률 감소 가능
          * 최대 조류 세기: 563
          */
-        $appearanceProbability -= ($tideProbability * ($weatherInfo->getTidePower() / $maxTidePower) * ($depth / $mapInfo->getMaxDepth()));
+        $appearanceProbability -= ($tideProbability * ($weatherInfo->getTidePower() / $maxTidePower)
+                                        * (($mapInfo->getMaxDepth() - $depth)/ $mapInfo->getMaxDepth()));
 
         /*
          * 물돌이 시간일 경우
          * 물돌이가 진행되는 '시'에 낚시를 할 경우 tidePeakProbability가 감소한다.
          */
-//        if (date(strtotime($weatherInfo->getTideTime()), "G") == date("G")) {
-//            $appearanceProbability -= $tidePeakProbability;
-//        }
+        $time = date("G", strtotime($weatherInfo->getTideTime()));
+        $time2 = date("G", time());
+        if ($time == $time2) {
+            $appearanceProbability -= $tidePeakProbability;
+        }
 
         if ($this->randomFunction($appearanceProbability, $cases) == 2) {
             return true;

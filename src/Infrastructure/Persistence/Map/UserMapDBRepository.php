@@ -13,7 +13,7 @@ class UserMapDBRepository extends BaseDBRepository
 {
     public function updateUserMap($userId, $mapId)
     {
-        $query = "update user_fishing_place set map_id = :map_id, fishing = 1 where user_id = :user_id;";
+        $query = "update user_fishing_place set map_id = :map_id where user_id = :user_id;";
 
         try {
             $this->db->beginTransaction();
@@ -44,13 +44,6 @@ class UserMapDBRepository extends BaseDBRepository
 
             $this->db->commit();
 
-            $result = 0;
-            if ($result < 0)
-                throw new NotFishingStatusException();
-
-            return $result;
-        } catch (NotFishingStatusException $e) {
-            throw $e;
         } catch (Exception $e) {
             throw new UserMapDBException();
         }

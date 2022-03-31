@@ -80,13 +80,12 @@ class UserFishDBRepository extends BaseDBRepository
         }
     }
     public function findNotInUserBookByUserId($userId) {
-        $query = " select f.fish_id, u.catch_date, f.fish_name, f.max_length, f.max_weight, m.map_id, m.map_name 
+        $query = " select distinct f.fish_id, f.fish_name, f.max_length, f.max_weight, m.map_id, m.map_name 
                 from user_fish u
                 join fish f on u.fish_id = f.fish_id
                 join map m on f.map_id = m.map_id
                 where user_id = :user_id
-                and f.fish_id not in (select fish_id from user_book b where b.user_id = :user_id) 
-                order by u.catch_date limit 1;";
+                and f.fish_id not in (select fish_id from user_book b where b.user_id = :user_id)";
 
         $result = array();
 
@@ -100,7 +99,6 @@ class UserFishDBRepository extends BaseDBRepository
                 foreach($fishes as &$fish) {
                     $userFish = new UserBookWithMapInfo($fish['fish_id'], $fish['fish_name'], $fish['map_id']
                         , $fish['map_name'], $fish['max_length'], $fish['max_weight']);
-                    $userFish->setCatchDate($fish['catch_date']);
                     array_push($result, $userFish);
                 }
             } else {

@@ -56,6 +56,7 @@ class UpdateUserFishingPlaceService
                  */
                 // 출항 상태 변경
                 $this->userMapDBRepository->updateUserMap($userId, $mapId);
+                $this->userMapDBRepository->updateFishingStatus($userId, 1);
 
                 // 출항한 지역에 대한 정보 가지고 오기
                 $result = $this->readDepartureInfo($userId, $mapId);

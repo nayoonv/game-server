@@ -8,20 +8,24 @@ use App\Infrastructure\Persistence\User\UserDBRepository;
 use App\Service\Boat\CreateBoatService;
 use App\Service\Map\CreateUserMapService;
 use App\Service\UserAccountUser\LoginUserAccountUserService;
+use App\Service\UserCurrentEquip\CreateUserCurrentEquipService;
 
 class LoginUserService
 {
     private UserDBRepository $userDBRepository;
     private CreateBoatService $createBoatService;
     private CreateUserMapService $createUserMapService;
+    private CreateUserCurrentEquipService $createUserCurrentEquipService;
     private LoginUserAccountUserService $loginUserAccountUserService;
 
     public function __construct(UserDBRepository $userDBRepository, CreateBoatService $createBoatService
-        , CreateUserMapService $createUserMapService, LoginUserAccountUserService $loginUserAccountUserService) {
+        , CreateUserMapService $createUserMapService, LoginUserAccountUserService $loginUserAccountUserService
+        , CreateUserCurrentEquipService $createUserCurrentEquipService) {
         $this->userDBRepository = $userDBRepository;
         $this->createBoatService = $createBoatService;
         $this->createUserMapService = $createUserMapService;
         $this->loginUserAccountUserService = $loginUserAccountUserService;
+        $this->createUserCurrentEquipService = $createUserCurrentEquipService;
     }
 
     // 게임 내 사용자 찾기
@@ -59,6 +63,7 @@ class LoginUserService
             $this->createBoatService->createUserBoat($userId);
             // user_fishing_place에 mapId 1로 지정하기
             $this->createUserMapService->createUserMap($userId);
+            $this->createUserCurrentEquipService->createUserCurrentEquip($userId);
         } catch (UrukException $e) {
             throw $e;
         }

@@ -129,7 +129,7 @@ class UserEquipDBRepository extends BaseDBRepository
 
             $sth->bindParam(":user_equip_id", $userEquipId);
             $sth->bindParam(":level", $level);
-            $sth->bindParam(":line_id", $preparationId);
+//            $sth->bindParam(":line_id", $preparationId);
 
             $sth->execute();
 
@@ -176,6 +176,7 @@ class UserEquipDBRepository extends BaseDBRepository
     public function insertEquipUpgradeUnavailable($userId, $equipId) {
         $query = "insert into user_equip(user_id, equip_id, upgrade_available) values (:user_id, :equip_id, 0)";
         try {
+            $this->db->beginTransaction();
             $sth = $this->db->prepare($query);
 
             $sth->bindParam(":user_id", $userId);

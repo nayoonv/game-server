@@ -37,7 +37,9 @@ class UpdateUserBookPrizeService
 
             if ($totalCount != $previousFishCount) {
                 $availablePrize = $this->getBookPrizeService->getBookPrizeBetweenCount($previousFishCount, $totalCount);
-                if ($availablePrize) {
+                $count = count($availablePrize);
+
+                if ($count!=0) {
                     // 선물함에 선물 증정하기
                     foreach ($availablePrize as &$prize) {
                         $requestUserGiftBox = new RequestUserGiftBox($userId, 1, $prize->getAssetId()
@@ -46,7 +48,7 @@ class UpdateUserBookPrizeService
                         $this->updateUserGiftBoxService->insertUserGiftBox($requestUserGiftBox);
                     }
 
-                    $bookPrizeId = $availablePrize[count($availablePrize) - 1]->getBookPrizeId();
+                    $bookPrizeId = $availablePrize[$count - 1]->getBookPrizeId();
                     $this->userBookPrizeDBRepository->updateBookPrizeId($userId, $bookPrizeId);
                     return $availablePrize;
                 }

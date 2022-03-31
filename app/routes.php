@@ -45,8 +45,7 @@ return function (App $app) {
     $app->group('/auth', function (Group $group) {
         // 2. 유저 인벤토리 목록 조회
         $group->post('/read-inven', ReadInvenAction::class);
-//        // 채비 변경 - 낚싯대
-//        $group->post('/update-u')
+
         // 7. 날씨 정보 조회
         $group->post('/read-weather', ReadWeatherAction::class);
 

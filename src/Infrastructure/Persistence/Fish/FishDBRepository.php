@@ -2,8 +2,11 @@
 
 namespace App\Infrastructure\Persistence\Fish;
 
+use App\Domain\Fishing\AuctionFish;
 use App\Domain\Fishing\Fish;
+use App\Exception\Base\UrukException;
 use App\Exception\Fish\FishDBException;
+use App\Exception\Fish\FishNotExistsException;
 use App\Infrastructure\Persistence\Base\BaseDBRepository;
 use PDOException;
 
@@ -35,5 +38,27 @@ class FishDBRepository extends BaseDBRepository
         }
 
         return $result;
+    }
+
+    public function findByFishId($fishId) {
+        $query = "select * from fish where fish_id = :fish_id";
+
+        try {
+            $sth = $this->db->prepare($query);
+            $sth->bindParam(":fish_id", $fishId);
+            $sth->execute();
+
+            $fish = $sth->fetch();
+
+            if ($fish) {
+                return new AuctionFish($fish['fish_grade_id'], $fish['max_length'], $fish['max_weight'], $fish['price']);
+            } else {
+                throw new FishNotExistsException();
+            }
+        } catch (FishNotExistsException $e) {
+            throw $e;
+        } catch (PDOException $exception) {
+            throw new FishDBException();
+        }
     }
 }

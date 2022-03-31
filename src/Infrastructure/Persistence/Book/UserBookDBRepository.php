@@ -31,7 +31,7 @@ class UserBookDBRepository extends BaseDBRepository
     }
 
     public function insertFish($userId, $fish) {
-        $query = "insert into user_book values (:user_id, :fish_id, :catch_date)";
+        $query = "insert into user_book values (:user_id, :fish_id, now())";
         $data = array_merge(['user_id' => $userId], $fish);
         try {
             $this->db->beginTransaction();

@@ -6,24 +6,31 @@ use App\Exception\Base\UrukException;
 use App\Exception\Fish\InvalidUserFishException;
 use App\Infrastructure\Persistence\Cost\UserFishCostDBRepository;
 use App\Service\Auction\UpdateUserFishAuctionService;
+use App\Service\Fish\GetFishService;
 use App\Service\Fish\GetUserFishService;
 use App\Service\Fish\UpdateUserFishService;
+use App\Service\User\UpdateUserService;
 use App\Util\SuccessResponseManager;
 
 class AddUserFishCostService
 {
     private GetUserFishService $getUserFishService;
+    private GetFishService $getFishService;
     private UpdateUserFishAuctionService $updateUserFishAuctionService;
     private UserFishCostDBRepository $userFishCostDBRepository;
     private UpdateUserFishService $updateUserFishService;
+    private UpdateUserService $updateUserService;
 
     public function __construct(GetUserFishService $getUserFishService
         , UpdateUserFishAuctionService $updateUserFishAuctionService, UserFishCostDBRepository $userFishCostDBRepository
-        , UpdateUserFishService $updateUserFishService) {
+        , UpdateUserFishService $updateUserFishService, GetFishService $getFishService
+        , UpdateUserService $updateUserService) {
         $this->getUserFishService = $getUserFishService;
         $this->updateUserFishAuctionService = $updateUserFishAuctionService;
         $this->userFishCostDBRepository = $userFishCostDBRepository;
         $this->updateUserFishService = $updateUserFishService;
+        $this->getFishService = $getFishService;
+        $this->updateUserService = $updateUserService;
     }
 
     public function sellFish($userId, $userFishId) {
@@ -51,17 +58,29 @@ class AddUserFishCostService
 
             // 판매가 user fish cost 에 insert
             $this->userFishCostDBRepository->insertCost($userId, $userFishInfo, $gold, $sellDate);
+            $this->updateUserService->updateUserAsset($userId, 1, $gold);
 
             // 물고기 삭제
             $this->updateUserFishService->deleteUserFish($userFishId);
 
-            return SuccessResponseManager::response($userFishInfo);
+            $result = array_merge(['fish_price' => $gold], ['fish_information' => $userFishInfo]);
+            return SuccessResponseManager::response($result);
         } catch (UrukException $e) {
             return $e->response();
         }
     }
 
     public function fishPrice($userFishInfo) {
-        return 10000;
+        $fishInfo = $this->getFishService->getFish($userFishInfo->getFishId());
+
+        $maxPrice = $fishInfo->getPrice();
+        $minPrice = $maxPrice;
+        // 최대 가격에서 유저가 잡은 물고기의 크기와 길이, 등급에 따라 최소 가격을 정한다.
+        $minPrice *= ($userFishInfo->getWeight()/$fishInfo->getMaxWeight())
+                                        * ($userFishInfo->getLength()/$fishInfo->getMaxLength());
+        $minPrice *= ($fishInfo->getFishGradeId()/3);
+
+        $price = (int) rand($minPrice, $maxPrice);
+        return $price;
     }
 }

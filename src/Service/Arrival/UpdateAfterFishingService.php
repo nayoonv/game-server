@@ -47,14 +47,12 @@ class UpdateAfterFishingService
                 // 도감에 등록되지 않은 물고기 list 보여주고 updatebeforecal
                 // 정산하지 않은 물고기들 중 도감에 등록되지 않은 물고기가 있는지 체크하고 정산 처리해준다.
                 $addedUserBookFish = $this->updateUserFishService->addFishInUserBook($userId);
-                if (count($addedUserBookFish) != 0) {
+                // 정산 처리
+                $this->updateUserFishService->updateUserFishBeforeCal($userId);
+                if ($addedUserBookFish == -1) {
+                    array_push($result, ['added_user_book_fish' => []]);
+                } else if (count($addedUserBookFish) != 0) {
                     array_push($result, ['added_user_book_fish' => $addedUserBookFish]);
-
-                    // 도감 상금 부분
-                    $prize = $this->prizeFromUserBook($userId);
-                    if ($prize) {
-                        array_push($result, ['prize' => $prize]);
-                    }
                 }
             } else {
                 // 잡은 물고기가 한마리도 없이 입항했을 때

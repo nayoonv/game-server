@@ -47,7 +47,7 @@ class BuyItemService
             $userInfo = $this->getUserService->getUser($userId);
 
             // 물건 가격과 사용자가 가지고 있는 가격을 비교한다.
-            $assetType = $storeInfo->getGoodsId();
+            $assetType = $storeInfo->getAssetId();
             $userAsset = false;
             $asset = $storeInfo->getCost();
             if ($assetType === 1) { // 골드

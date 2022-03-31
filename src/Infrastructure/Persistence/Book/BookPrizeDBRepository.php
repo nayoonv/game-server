@@ -37,7 +37,7 @@ class BookPrizeDBRepository extends BaseDBRepository
 
     public function findBetweenCount($previousCount, $currentCount) {
         $query = "select * from book_prize where fish_count between :previous_count and :current_count";
-        $result = array();
+        $result = -1;
 
         try {
             $sth = $this->db->prepare($query);
@@ -51,11 +51,7 @@ class BookPrizeDBRepository extends BaseDBRepository
                 foreach($bookPrizes as &$bookPrize) {
                     $result = new BookPrize($bookPrize['book_prize_id'], $bookPrize['fish_count'], $bookPrize['asset_id'], $bookPrize['cost']);
                 }
-            } else {
-                throw new BookPrizeNotExistsBetweenCountException();
             }
-        } catch(BookPrizeNotExistsBetweenCountException $e) {
-            throw $e;
         } catch(PDOException $exception) {
             throw new BookPrizeDBException();
         }

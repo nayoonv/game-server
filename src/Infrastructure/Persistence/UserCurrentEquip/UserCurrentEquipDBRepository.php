@@ -128,4 +128,21 @@ class UserCurrentEquipDBRepository extends BaseDBRepository
             throw new UserCurrentEquipDBException();
         }
     }
+
+    public function insert($userId) {
+        $query = "insert into user_current_equip(user_id) values (:user_id)";
+        try {
+            $this->db->beginTransaction();
+
+            $sth = $this->db->prepare($query);
+
+            $sth->bindParam(":user_id", $userId);
+
+            $sth->execute();
+
+            $this->db->commit();
+        } catch (PDOException $e) {
+            throw new UserCurrentEquipDBException();
+        }
+    }
 }
